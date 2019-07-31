@@ -1,0 +1,57 @@
+# granite
+
+This project is intended to be a model or starter for a Java web application that will be highly-maintainable over a long period of time (20+ years).
+
+## business requirements
+
+- application security must meet standards
+- accessibility (web front-end) must meet standards for visually-impaired
+- usability on mobile/tablet screens "nice to have", maybe a requirement soon
+- web app must handle thousands of daily users, millions of transactions annually
+- must provide a REST API for at least one 3rd party providing a web front-end to our back-end
+- multi-language support would be "nice to have"
+- backup and recovery must be solidly planned
+- application likely to last 20+ years and may be maintained by developers of widely varied skill levels
+
+## goals
+
+A web application that lives a long time will be touched by a lot of people.  It will see numerous version changes in programming languages, databases, etc., and will sometimes have to make those changes urgently due to security vulnerabilities.  It should avoid unnecessary complexity that will make it harder for later developers to orient themselves.  It should have a solid logging framework, automated testing, security, accessibility, instrumentation (e.g. for performance analytics), and documentation from the very beginning.  That's a lot of up-front work before really developing the app's funcationality, but it will lead to a profound reduction of risk and cost in years to come.  This repo will allow that up-front work to be re-usable for more than one project.
+
+It should have a build process defined in code (i.e. Maven) and an environment defined in code (i.e. Docker) so that these will be communicated and kept up to date via version control.  The build process should be independent of a developer's IDE (or really anything outside the version-controlled code repo).  Differences in environments should be kept out of the code, so the same application can run in all environments.  (I am used to using environment variables for this, but my impression is that the Java world prefers XML configuration files.  I'll research further before choosing an approach.)  The application should rely on external libraries as much as possible, to keep its own codebase small.  Specified version numbers of these libraries should be pulled in with a dependency manager rather than bundled with the project.  This prevents the evolution of modified/customized libraries over the years.  Additionally, version numbers can sometimes be hard to figure out from an old JAR or an old script, so the dependency manifest (i.e. `pom.xml`) makes them clear for all time.  As a corrollary, we should try to pick libraries that are in broad use and will likely still exist for years to come.
+
+The DDL script(s) that define the database(s) should also be version-controlled, even if the database is not part of the automated build process, both to maintain the history of changes and so they can be used to generate mock databases during automated testing.  I assume that developers will *not* have direct control of their production database, but will be working with a DBA.  They need to be able to design a migration (DDL script to alter or add to the schema), re-build a mock database on their local machine and/or test server, and then hand it to the DBA.  If building a mock database is part of the automated build/test cycle it should quickly alert the the team to database changes that don't get recorded in the code repository, and vice versa.
+
+Since code updates may be "out of sync" with database changes, some effort should be made to ensure backward and forward compatibility (see Ambler & Sadalage's *Refactoring Databases: Evolutionary Database Design* for some ideas). For starters:
+
+- use views or stored procedures whenever possible, so the underlying schema can be changed but the interface stay the same
+- if a database change would break older versions of the code, a view or stored procedure or trigger should be used to support the older version of the code
+- if new code wouldn't work with an older version of the database, it should fail gracefully with a message like "feature not available" instead of blowing up
+
+## technologies
+
+- HTML5, CSS3
+- JQuery
+- Bootstrap 4
+- No front-end framework (like Angular or similar) because devs may come in with varying skill levels.  Having to learn Java and Spring at the same time you're learning JS and Angular (for example) would be too much of a burden, and lead to over-complicated code.  We'll just use a good old-fashioned templating engine for the front-end, and very limited AJAX powered by JQuery.
+- Java 8
+  - Java is up to version 12 at the time of writing, but Java 8 was a major milestone that every dev should be comfortable with
+- JUnit 5
+  - makes use of Java 8 features
+- [Integration/system testing tool]
+- [UX testing tool]
+- [load testing tools]
+- [Code quality scanning/linting tools]
+- [Security vulnerability scanning tools]
+- Spring Boot
+  - this framework does a lot behind the scenes, which lets us keep our own codebase smaller, hence more readable and maintainable by future devs
+- [Undecided template framework]
+  - the problem with JSP is that there's a temptation for lots of business code to creep into the templates; i'm looking at some of the other template engines such as Velocity, ThymeLeaf, FreeMarker, Groovy, etc, to find one that will best keep that separation of concerns.  again, the idea is to keep code tidy, so someone can understand it in 20 years
+- Maven
+  - for build automation and dependency management
+- Docker
+  - to package the application for easy deployment
+- Git/Github
+  - git is good, but with Github as a front-end it's far more valuable than any other VCS.  Github allows hooking into continuous integration, static analysis, and other 3rd party tools.
+- PostgreSQL
+  - I'm not a fan of ORM tools that obscure the database from the developer, so I'm going to pick a specific database and write my own SQL.  Postgres is good, free, and popular.
+- [backup tools]
