@@ -27,6 +27,19 @@ Since code updates may be "out of sync" with database changes, some effort shoul
 - if a database change would break older versions of the code, a view or stored procedure or trigger should be used to support the older version of the code
 - if new code wouldn't work with an older version of the database, it should fail gracefully with a message like "feature not available" instead of blowing up
 
+## design principles
+
+- Use good, standard Java 8+ coding practices, checked continually with static analysis tools looking for poor style, potential bugs, security vulnerabilities, etc, to keep the code maintainable for many years.
+- Document design/architecture decisions from the beginning, comment every class in the code (as well as key methods), and try to keep this documentation up to date (version controlled!).
+- Use HTML-based templates for the web front-end rather than a JavaScript-based framework, and keep AJAX to a minimum.  This is to reduce the learning curve for future developers who may not want to have to learn a front-end framework and a back-end framework at the same time.
+- Separate the data/query code from direct calls to the front end.  The application should be expose both a website as well as via a JSON REST API without a lot of duplicated code.
+- Use external libraries (e.g. Bootstrap, JQuery, Spring Boot) to keep our own code base as small as possible.  The exception to this is we'll write our own SQL rather than using an ORM.
+- Pull in those external dependencies using a dependency management system (e.g. Maven) rather than including them in our code repository. Use specific version numbers known to work.
+- One codebase and one build for all environments: developer workstation, test server, staging server, production.  It should run on all major operating systems.
+- Write automated tests as you go, so a large suite of tests will be built up over time, without requiring time to be budgeted for a separate "testing project".  By re-running these tests after every change, problems can be fixed quickly and QA can approve deployments with confidence.
+- Build process, testing process, and database DDL should all be version-controlled and kept up-to-date.
+- Since the developers may not have direct control of the production database, build a sample database during automated testing as a way of making sure the application code and DDL are in sync.
+
 ## technologies
 
 - HTML5, CSS3
