@@ -55,3 +55,25 @@ Since code updates may be "out of sync" with database changes, some effort shoul
 - PostgreSQL
   - I'm not a fan of ORM tools that obscure the database from the developer, so I'm going to pick a specific database and write my own SQL.  Postgres is good, free, and popular.
 - [backup tools]
+
+## build process
+
+Assuming you have Docker, Maven, and Java 8 installed. (TODO: Make fewer assumptions!)
+
+The `pom.xml` currently uses the Spotify `dockerfile-maven-plugin` to build an image.  Just enter:
+
+    mvn clean install
+    
+This creates a docker image called `joeclark77/granite` tagged with the version number, and you can change this all in the POM file.
+
+Currently Maven doesn't yet start the Docker image, run tests, or deploy it to Docker Hub.  I can do that manually with:
+
+    docker push joeclark77/granite
+
+## try it out
+
+You should be able to do this from anywhere (assuming you have Docker):
+
+    docker run -t -p 8080:8080 joeclark77/granite
+    
+And check out the web app running at http://localhost:8080
