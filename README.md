@@ -75,7 +75,7 @@ Assuming you have Docker, Maven, and Java 8 installed. (TODO: Make fewer assumpt
 
 The `pom.xml` currently uses the Spotify `dockerfile-maven-plugin` to build an image.  Just enter:
 
-    mvn clean install
+    mvn clean install dockerfile:build
     
 This creates a docker image called `joeclark77/granite` tagged with the version number, and you can change this all in the POM file.
 
@@ -87,6 +87,6 @@ Currently Maven doesn't yet start the Docker image, run tests, or deploy it to D
 
 You should be able to do this from anywhere (assuming you have Docker):
 
-    docker run -t -p 8080:8080 joeclark77/granite
+    docker run -t -p 8080:8080 joeclark77/granite:0.1-SNAPSHOT
     
 And check out the web app running at http://localhost:8080
