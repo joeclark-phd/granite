@@ -15,6 +15,7 @@ There are at least three levels of testing possible:
     @RunWith(SpringRunner.class)
     @WebMvcTest(HomeController.class)
     ```
+   I think the idea here is to use mock/stub objects for the Service (or Repository or whatever) so you're really just testing the pass-through from the service to the view via a controller.  See `HomeControllerTest.java` for an example.
    
 1. Tests of the "MVC Layer" that test the whole stack except without starting an HTTP server, hence they are faster.  These would be annotated with:
     ```
@@ -22,6 +23,7 @@ There are at least three levels of testing possible:
     @SpringBootTest
     @AutoConfigureMockMvc
     ```
+   In this case we might test endpoints at the controller using the real service, repository, and model classes.  A typical "integration test".  See my example: `HomeControllerIntegrationTest.java`.
    
 1. Whole-system tests that start up the server in the developer's environment, carrying out HTTP requests and testing responses.  These are annotated with the following code.  I'm not sure I want to use them, unless I can write the code for these and re-use it for the next type, below.
     ```
@@ -33,6 +35,6 @@ There are at least three levels of testing possible:
 
 ## Current tests
 
-I definitely intend to add simple unit tests throughout (aka "type 1") and ultimately aspire to running the kind of whole-system tests (aka "type 5").  The types in between, I'm not so sure about.  I'm not sure I understand the difference between "type 2" and "type 3".  I intend to use "type 2" test classes for each Controller, until a reason for the other types becomes clear.
+I definitely intend to add simple unit tests throughout (aka "type 1") and ultimately aspire to running the kind of whole-system tests (aka "type 5").  The types in between, I'm not so sure about.  I'm not sure I fully understand the difference between "type 2" and "type 3".  I intend to use "type 2" test classes for each Controller, until a reason for the other types becomes clear.
 
 Following the example in the guide, I also have a class ApplicationTest.class which tests whether the application even loads.  I frankly don't know what level that operates at, if any, between #1-#4!

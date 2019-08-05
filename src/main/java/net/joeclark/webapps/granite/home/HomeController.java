@@ -1,4 +1,4 @@
-package net.joeclark.webapps.granite.controller;
+package net.joeclark.webapps.granite.home;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,8 +8,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class HomeController {
 
+    private final GreetingService greetingService;
+
+    public HomeController(GreetingService greetingService) {
+        this.greetingService = greetingService;
+    }
+
     @GetMapping("/")
     public String greeting( @RequestParam(name="name",required=false,defaultValue="World") String name, Model model ) {
+        model.addAttribute("greeting",greetingService.greeting());
         model.addAttribute("name",name);
         return "index"; // resolves to src/main/resources/templates/index.html
     }
