@@ -48,8 +48,7 @@ Since code updates may be "out of sync" with database changes, some effort shoul
 - No front-end framework (like Angular or similar) because devs may come in with varying skill levels.  Having to learn Java and Spring at the same time you're learning JS and Angular (for example) would be too much of a burden, and lead to over-complicated code.  We'll just use a good old-fashioned templating engine for the front-end, and very limited AJAX powered by JQuery.
 - Java 8
   - Java is up to version 12 at the time of writing, but Java 8 was a major milestone that every dev should be comfortable with
-- JUnit 5
-  - makes use of Java 8 features
+- [JUnit 5 and Spring Testing for automated tests](plan/tests.md)
 - [Integration/system testing tool]
 - [UX testing tool]
 - [load testing tools]
