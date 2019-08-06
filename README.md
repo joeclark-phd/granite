@@ -42,28 +42,28 @@ Since code updates may be "out of sync" with database changes, some effort shoul
 
 ## technologies
 
-- HTML5, CSS3
-- JQuery
-- Bootstrap 4
-- No front-end framework (like Angular or similar) because devs may come in with varying skill levels.  Having to learn Java and Spring at the same time you're learning JS and Angular (for example) would be too much of a burden, and lead to over-complicated code.  We'll just use a good old-fashioned templating engine for the front-end, and very limited AJAX powered by JQuery.
 - Java 8
-  - Java is up to version 12 at the time of writing, but Java 8 was a major milestone that every dev should be comfortable with
-- [JUnit 5 and Spring Testing for automated tests](plan/tests.md)
-- [Integration/system testing tool]
+  - Java is up to version 12 at the time of writing, but Java 8 was a major milestone that every dev should be comfortable with.
+- Spring Boot
+  - This framework does a lot behind the scenes, which lets us keep our own codebase smaller, hence more readable and maintainable by future devs.
+- HTML5, CSS3, [JQuery](https://jquery.com/), [Bootstrap](https://getbootstrap.com/) 4, and a [Bootswatch](https://bootswatch.com/) theme.
+  - JQuery, Bootstrap, and Popper.js (a Bootstrap dependency) are pulled in by Maven at build time from [webjars.org](https://www.webjars.org/), along with a Bootswatch theme (an indulgence, but I like the look of it).  Letting Maven do this ensures that we control exactly which versions we're using, and mitigates the risk of a locally-saved copy which might accumulate undocumented customizations over the years.
+- [Thymeleaf](https://www.thymeleaf.org/) template engine
+  - The problem with JSP is that there's a temptation for lots of business code to creep into the templates; newer template engines such as ThymeLeaf, Velocity, FreeMarker, Groovy, etc, are better at keeping code tidy and responsibilities separate, so someone can understand it in 20 years.  I picked Thymeleaf for this project and will stick with it until I find a reason not to.
+- *No JavaScript-based front-end framework* 
+  - I've used Angular and it's great, but developers on a long-lived project may come in with varying skill levels.  Having to learn Java and Spring at the same time you're learning JavaScript/TypeScript and a JS-based framework like Angular would be too much of a hurdle, and lead to over-complicated code.  We'll use good old-fashioned templates and very limited AJAX to keep it straightforward.
+- JUnit 5 (aka [JUnit Jupiter](https://junit.org/junit5/)) for automated tests, along with some annotations provided by Spring Boot.
+  - More on our testing plan here: [plan/tests.md](plan/tests.md)
 - [UX testing tool]
 - [load testing tools]
 - [Code quality scanning/linting tools]
 - [Security vulnerability scanning tools]
-- Spring Boot
-  - this framework does a lot behind the scenes, which lets us keep our own codebase smaller, hence more readable and maintainable by future devs
-- [Undecided template framework]
-  - the problem with JSP is that there's a temptation for lots of business code to creep into the templates; i'm looking at some of the other template engines such as Velocity, ThymeLeaf, FreeMarker, Groovy, etc, to find one that will best keep that separation of concerns.  again, the idea is to keep code tidy, so someone can understand it in 20 years
 - Maven
   - for build automation and dependency management
 - Docker
   - to package the application for easy deployment
 - Git/Github
-  - git is good, but with Github as a front-end it's far more valuable than any other VCS.  Github allows hooking into continuous integration, static analysis, and other 3rd party tools.
+  - `git` is good, but with Github as a front-end it's far more valuable than any other VCS.  Github allows hooking into continuous integration, static analysis, and other 3rd party tools.
 - PostgreSQL
   - I'm not a fan of ORM tools that obscure the database from the developer, so I'm going to pick a specific database and write my own SQL.  Postgres is good, free, and popular.
 - [backup tools]
