@@ -1,12 +1,24 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Getting Started: Serving Web Content</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>The Granite Project</title>
+    <!-- flatly from bootswatch is a themed drop-in replacement for bootstrap -->
+    <!--<link href="webjars/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">-->
+    <link href="webjars/bootswatch-flatly/4.2.1/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+<div class="container">
 
-<p th:text="${greeting}+' '+${name}"></p>
+<div class="alert alert-primary" th:text="${greeting}+' '+${name}">Greetings!</div>
 
+</div>
+
+<!-- scripts required by bootstrap -->
+<script src="webjars/jquery/3.4.1/jquery.min.js"></script>
+<script src="webjars/popper.js/1.15.0/popper.min.js"></script>
+<script src="webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<!-- end of scripts required by bootstrap -->
 </body>
 </html>

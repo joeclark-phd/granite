@@ -56,6 +56,31 @@
             <version>3.0.0</version>
         </dependency>
 
+        <!-- Pull in jquery and bootstrap at build time. This ensures that we have exactly the versions we expect. -->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jquery</artifactId>
+            <version>3.4.1</version>
+        </dependency>
+        <!-- Popper.js is a dependency of Boostrap. -->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>popper.js</artifactId>
+            <version>1.15.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>bootstrap</artifactId>
+            <version>4.3.1</version>
+        </dependency>
+        <!-- Flatly from bootswatch is a themed drop-in replacement for Bootstrap.
+             If you'd rather use plain Boostrap, you'll find it commented out in the HEAD of our HTML file(s).
+             Simply uncomment it, and delete or comment out the line that call's Flatly's bootstrap.min.css. -->
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>bootswatch-flatly</artifactId>
+            <version>4.2.1</version>
+        </dependency>
     </dependencies>
 
     <build>
