@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -14,7 +15,7 @@
 
     <div class="row align-items-center justify-content-sm-center">
         <div class="col-sm-auto text-center my-3">
-            <img src="granite.jpg" class="img-fluid" alt="Granite logo">
+            <img src="public/granite.jpg" class="img-fluid" alt="Granite logo">
         </div>
         <div class="col-md-8 col-lg-6 col-xl-5 text-center">
             <h3>Granite Application</h3>
@@ -24,10 +25,9 @@
                 <div class="card-header bg-primary text-white">Granite Welcome</div>
                 <div class="card-body">
 
+                    <h1 th:text="${greeting}+' '+${name}">Greetings!</h1>
 
-
-                        <h1 th:text="${greeting}+' '+${name}">Greetings!</h1>
-
+                    <a class="btn btn-primary" th:href="@{/home}" role="button">Go Home!</a>
 
                 </div>
             </div>

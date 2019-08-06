@@ -14,11 +14,22 @@ public class HomeController {
         this.greetingService = greetingService;
     }
 
+    /** The publicly-visible homepage, in this case featuring a login form. */
     @GetMapping("/")
-    public String greeting( @RequestParam(name="name",required=false,defaultValue="World") String name, Model model ) {
+    public String publicIndex( @RequestParam(name="name",required=false,defaultValue="World") String name, Model model ) {
         model.addAttribute("greeting",greetingService.greeting());
         model.addAttribute("name",name);
         return "index"; // resolves to src/main/resources/templates/index.html
+    }
+
+    @GetMapping("/home")
+    public String homePage() {
+        return "home";
+    }
+
+    @GetMapping("/login")
+    public String loginPage() {
+        return "login";
     }
 
 }
