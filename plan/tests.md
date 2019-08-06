@@ -12,14 +12,12 @@ There are at least three levels of testing possible:
 
 1. Tests of the "Web Layer" without the whole application context.  These are set up with the following annotations.  Optionally we may just test one controller at a time:
     ```
-    @RunWith(SpringRunner.class)
     @WebMvcTest(HomeController.class)
     ```
    I think the idea here is to use mock/stub objects for the Service (or Repository or whatever) so you're really just testing the pass-through from the service to the view via a controller.  See `HomeControllerTest.java` for an example.
    
 1. Tests of the "MVC Layer" that test the whole stack except without starting an HTTP server, hence they are faster.  These would be annotated with:
     ```
-    @RunWith(SpringRunner.class)
     @SpringBootTest
     @AutoConfigureMockMvc
     ```
@@ -27,7 +25,6 @@ There are at least three levels of testing possible:
    
 1. Whole-system tests that start up the server in the developer's environment, carrying out HTTP requests and testing responses.  These are annotated with the following code.  I'm not sure I want to use them, unless I can write the code for these and re-use it for the next type, below.
     ```
-    @RunWith(SpringRunner.class)
     @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
     ```
 
