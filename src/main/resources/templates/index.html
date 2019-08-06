@@ -9,9 +9,31 @@
     <link href="webjars/bootswatch-flatly/4.2.1/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<div class="container">
+<div class="container pt-2">
 
-<div class="alert alert-primary" th:text="${greeting}+' '+${name}">Greetings!</div>
+
+    <div class="row align-items-center justify-content-sm-center">
+        <div class="col-sm-auto text-center my-3">
+            <img src="granite.jpg" class="img-fluid" alt="Granite logo">
+        </div>
+        <div class="col-md-8 col-lg-6 col-xl-5 text-center">
+            <h3>Granite Application</h3>
+            <small>Version 0.1-SNAPSHOT</small>
+
+            <div class="card">
+                <div class="card-header bg-primary text-white">Granite Welcome</div>
+                <div class="card-body">
+
+
+
+                        <h1 th:text="${greeting}+' '+${name}">Greetings!</h1>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
 
 </div>
 
