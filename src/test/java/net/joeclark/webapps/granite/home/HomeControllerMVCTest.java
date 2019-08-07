@@ -11,7 +11,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -33,6 +33,7 @@ class HomeControllerMVCTest {
             .andDo(print())
             .andExpect(status().isOk())
             .andExpect(content().string(containsString("Bonjour World")));
+        verify(service,times(1)).greeting(); // verifies that service.greeting() was called once
     }
 
 
