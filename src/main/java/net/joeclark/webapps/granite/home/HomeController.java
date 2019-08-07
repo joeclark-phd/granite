@@ -1,5 +1,6 @@
 package net.joeclark.webapps.granite.home;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,11 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class HomeController {
 
-    private final GreetingService greetingService;
-
-    public HomeController(GreetingService greetingService) {
-        this.greetingService = greetingService;
-    }
+    @Autowired
+    private GreetingService greetingService;
 
     /** The publicly-visible homepage, in this case featuring a login form. */
     @GetMapping("/")
