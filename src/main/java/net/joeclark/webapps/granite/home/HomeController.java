@@ -1,5 +1,7 @@
 package net.joeclark.webapps.granite.home;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,12 +11,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class HomeController {
 
+    Logger logger = LoggerFactory.getLogger(HomeController.class);
+
     @Autowired
     private GreetingService greetingService;
 
     /** The publicly-visible homepage, in this case featuring a login form. */
     @GetMapping("/")
     public String publicIndex( @RequestParam(name="name",required=false,defaultValue="World") String name, Model model ) {
+        logger.debug("Processing index page request.");
         model.addAttribute("greeting",greetingService.greeting());
         model.addAttribute("name",name);
         return "index"; // resolves to src/main/resources/templates/index.html
@@ -22,11 +27,13 @@ public class HomeController {
 
     @GetMapping("/home")
     public String homePage() {
+        logger.debug("Accessing /home page. User should have authenticated first.");
         return "home";
     }
 
     @GetMapping("/login")
     public String loginPage() {
+        logger.debug("Accessing /login page.");
         return "login";
     }
 

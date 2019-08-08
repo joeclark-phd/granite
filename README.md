@@ -44,16 +44,37 @@ Since code updates may be "out of sync" with database changes, some effort shoul
 
 - Java 8
   - Java is up to version 12 at the time of writing, but Java 8 was a major milestone that every dev should be comfortable with.
+  
 - Spring Boot
   - This framework does a lot behind the scenes, which lets us keep our own codebase smaller, hence more readable and maintainable by future devs.
+  
 - HTML5, CSS3, [JQuery](https://jquery.com/), [Bootstrap](https://getbootstrap.com/) 4, and a [Bootswatch](https://bootswatch.com/) theme.
   - JQuery, Bootstrap, and Popper.js (a Bootstrap dependency) are pulled in by Maven at build time from [webjars.org](https://www.webjars.org/), along with a Bootswatch theme (an indulgence, but I like the look of it).  Letting Maven do this ensures that we control exactly which versions we're using, and mitigates the risk of a locally-saved copy which might accumulate undocumented customizations over the years.
+  
 - [Thymeleaf](https://www.thymeleaf.org/) template engine
   - The problem with JSP is that there's a temptation for lots of business code to creep into the templates; newer template engines such as ThymeLeaf, Velocity, FreeMarker, Groovy, etc, are better at keeping code tidy and responsibilities separate, so someone can understand it in 20 years.  I picked Thymeleaf for this project and will stick with it until I find a reason not to.
+  
 - *No JavaScript-based front-end framework* 
   - I've used Angular and it's great, but developers on a long-lived project may come in with varying skill levels.  Having to learn Java and Spring at the same time you're learning JavaScript/TypeScript and a JS-based framework like Angular would be too much of a hurdle, and lead to over-complicated code.  We'll use good old-fashioned templates and very limited AJAX to keep it straightforward.
+  
 - JUnit 5 (aka [JUnit Jupiter](https://junit.org/junit5/)) for automated tests, along with some annotations provided by Spring Boot.
   - More on our testing plan here: [plan/tests.md](plan/tests.md)
+  
+- [SLF4J](https://www.slf4j.org/) API for logging.
+  - Spring Boot provides the logging implementation (I believe the default is *Logback*) but with the SLF4J facade we don't need to know about it.  Simply add a line like this at the top of any class:
+  
+    ```
+    Logger logger = LoggerFactory.getLogger(MyClass.class);
+    ```
+    
+    And then you can log any relevant info throughout the application like so:
+    
+    ```
+    logger.debug("Initializing new instance of MyClass...");
+    ```
+    
+    The available logging levels are `trace`, `debug`, `info`, `warn`, and `severe`.
+    
 - [UX testing tool]
 - [load testing tools]
 - [Code quality scanning/linting tools]
@@ -87,5 +108,5 @@ Currently Maven doesn't yet start the Docker image, run tests, or deploy it to D
 You should be able to do this from anywhere (assuming you have Docker):
 
     docker run -t -p 8080:8080 joeclark77/granite:0.1-SNAPSHOT
-    
-And check out the web app running at http://localhost:8080
+
+And check out the web app running at http://localhost:8080. The test user account is `user` and a password will be printed to the console in the server's startup messages.
