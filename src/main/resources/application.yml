@@ -1,0 +1,9 @@
+logging:
+  level:
+    web: DEBUG
+    net.joeclark.webapps.granite: TRACE
+
+spring:
+  thymeleaf:
+    cache: false
+
