@@ -1,7 +1,10 @@
+# These are default configurations that will be used by default if they are not overridden by a Spring Profile or by e.g. a command-line argument.
+# Profile-specific configurations can be defined in application-[profile].yml and will override these settings if they conflict.
+
 logging:
   level:
-    web: DEBUG
-    net.joeclark.webapps.granite: TRACE
+    web: INFO
+    net.joeclark.webapps.granite: INFO
 
 spring:
   thymeleaf:
