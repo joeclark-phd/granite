@@ -1,20 +1,60 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-    <title>Spring Security Example </title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>The Granite Project</title>
+    <!-- flatly from bootswatch is a themed drop-in replacement for bootstrap -->
+    <!--<link rel="stylesheet" href="webjars/bootstrap/4.3.1/css/bootstrap.min.css">-->
+    <link rel="stylesheet" href="webjars/bootswatch-flatly/4.2.1/bootstrap.min.css">
 </head>
 <body>
-<div th:if="${param.error}">
-    Invalid username and password.
+<div class="container pt-2">
+
+
+    <div class="row align-items-center justify-content-sm-center">
+        <div class="col-sm-auto text-center my-3">
+            <img src="public/granite.jpg" class="img-fluid" alt="Granite logo">
+        </div>
+        <div class="col-md-8 col-lg-6 col-xl-5 text-center">
+            <h3><a href="/">Granite</a> Application</h3>
+            <small>Version 0.1-SNAPSHOT</small>
+
+            <div class="card">
+                <div class="card-header bg-primary text-white">Sign In</div>
+                <div class="card-body">
+
+
+
+
+                    <div class="alert alert-danger" th:if="${param.error}">
+                        Invalid username or password.
+                    </div>
+                    <div class="alert alert-info" th:if="${param.logout}">
+                        You have been logged out.
+                    </div>
+                    <form th:action="@{/login}" method="post">
+                        <div class="form-group row"><label for="username" class="col-form-label col-4">User Name:</label><div class="col-8"><input class="form-control" id="username" type="text" name="username"/></div></div>
+                        <div class="form-group row"><label for="password" class="col-form-label col-4">Password:</label><div class="col-8"><input class="form-control" id="password" type="password" name="password"/></div></div>
+                        <button type="submit" class="btn btn-primary">Sign In</button>
+                    </form>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </div>
-<div th:if="${param.logout}">
-    You have been logged out.
-</div>
-<form th:action="@{/login}" method="post">
-    <div><label> User Name : <input type="text" name="username"/> </label></div>
-    <div><label> Password: <input type="password" name="password"/> </label></div>
-    <div><input type="submit" value="Sign In"/></div>
-</form>
+
+<!-- scripts required by bootstrap -->
+<script src="webjars/jquery/3.4.1/jquery.min.js"></script>
+<script src="webjars/popper.js/1.15.0/popper.min.js"></script>
+<script src="webjars/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<!-- end of scripts required by bootstrap -->
 </body>
+</html>
 </html>
