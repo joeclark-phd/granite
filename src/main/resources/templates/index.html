@@ -27,7 +27,26 @@
 
                     <h1 th:text="${greeting}+' '+${name}">Greetings!</h1>
 
-                    <a class="btn btn-primary" th:href="@{/home}" role="button">Go Home!</a>
+                    <div sec:authorize="isAuthenticated()">
+                        You are authenticated.  Welcome, <span sec:authentication="name">Joe</span>
+                        <form th:action="@{/logout}" method="post">
+                            <input type="submit" value="Sign Out"/>
+                        </form>
+                    </div>
+
+                    <div sec:authorize="!isAuthenticated()">
+                        <div class="alert alert-danger" th:if="${param.error}">
+                            Invalid username or password.
+                        </div>
+                        <div class="alert alert-info" th:if="${param.logout}">
+                            You have been logged out.
+                        </div>
+                        <form th:action="@{/login}" method="post">
+                            <div class="form-group row"><label for="username" class="col-form-label col-4">User Name:</label><div class="col-8"><input class="form-control" id="username" type="text" name="username"/></div></div>
+                            <div class="form-group row"><label for="password" class="col-form-label col-4">Password:</label><div class="col-8"><input class="form-control" id="password" type="password" name="password"/></div></div>
+                            <button type="submit" class="btn btn-primary">Sign In</button>
+                        </form>
+                    </div>
 
                 </div>
             </div>

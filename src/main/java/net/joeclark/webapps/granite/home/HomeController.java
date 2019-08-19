@@ -16,7 +16,7 @@ public class HomeController {
     @Autowired
     private GreetingService greetingService;
 
-    /** The publicly-visible homepage, in this case featuring a login form. */
+    /** The homepage for both authenticated and unauthenticated requests, showing different content for each. */
     @GetMapping("/")
     public String publicIndex( @RequestParam(name="name",required=false,defaultValue="World") String name, Model model ) {
         logger.debug("Processing index page request.");
@@ -25,12 +25,7 @@ public class HomeController {
         return "index"; // resolves to src/main/resources/templates/index.html
     }
 
-    @GetMapping("/home")
-    public String homePage() {
-        logger.debug("Accessing /home page. User should have authenticated first.");
-        return "home";
-    }
-
+    /** A dedicated login form for when unauthenticated users attempt to directly access pages other than the homepage */
     @GetMapping("/login")
     public String loginPage() {
         logger.debug("Accessing /login page.");

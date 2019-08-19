@@ -1,4 +1,4 @@
-package net.joeclark.webapps.granite;
+package net.joeclark.webapps.granite.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +31,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/login").permitAll()
                 .and()
             .logout()
-                .logoutSuccessUrl("/")
+                .logoutUrl("/logout") // I think this is the default, but I like to have it made explicit.
+                .logoutSuccessUrl("/?logout") // Sending "logout" as a query parameter allows us to alert the user he's been logged out.
                 .and()
             .authorizeRequests()
                 .mvcMatchers("/").permitAll() // This/these endpoint(s) will be viewable by anyone not logged in.
