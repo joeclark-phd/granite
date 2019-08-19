@@ -28,7 +28,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
             .formLogin()
-                .loginPage("/login").permitAll()
+                .loginPage("/login").permitAll() // Login will often come from the homepage ("/") but if an unauthenticated user tries to directly access another page, they'll see this login page.
                 .and()
             .logout()
                 .logoutUrl("/logout") // I think this is the default, but I like to have it made explicit.
@@ -36,6 +36,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
             .authorizeRequests()
                 .mvcMatchers("/").permitAll() // This/these endpoint(s) will be viewable by anyone not logged in.
+                .mvcMatchers("/api/v1/agency").permitAll() // TEMPORARY!... until I learn how to secure a REST API
                 .mvcMatchers("/home").authenticated() // All other URL endpoints require authentication or will redirect users to the login page.
                 .anyRequest().denyAll(); // Deny-by-default of any unauthorized or malformed URL is a security best practice.
         logger.debug("Executed custom security configuration for Granite project.");
