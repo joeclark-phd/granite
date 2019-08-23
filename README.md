@@ -110,3 +110,5 @@ You should be able to do this from anywhere (assuming you have Docker):
     docker run -t -p 8080:8080 joeclark77/granite:0.1-SNAPSHOT
 
 And check out the web app running at http://localhost:8080. The test user account is `user` and a password will be printed to the console in the server's startup messages.
+
+bar
