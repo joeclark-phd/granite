@@ -1,5 +1,6 @@
 package net.joeclark.webapps.granite.home;
 
+import org.hamcrest.CoreMatchers;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Nested;
@@ -11,6 +12,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.not;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -75,21 +77,24 @@ class HomeControllerMVCTest {
         }
 
         @Test
-        @DisplayName("The /home page should be blocked to those not logged in.")
-        public void homePageShouldBeBlockedToUnauthorizedGuests() throws Exception {
-            mockMvc.perform(get("/home"))
+        @DisplayName("The index page / should show certain contanet ONLY to those not logged in.")
+        public void indexPageShowsCertainContentOnlyToThoseNotLoggedIn() throws Exception {
+            mockMvc.perform(get("/"))
                     .andDo(print())
-                    .andExpect(status().is3xxRedirection());
+                    .andExpect(status().isOk())
+                    .andExpect(content().string(containsString("Sign In")))
+                    .andExpect(content().string(not(containsString("You are authenticated."))));
         }
 
         @WithMockUser(value="user")
         @Test
-        @DisplayName("The /home page should be accessible to logged-in users.")
-        public void homePageShouldBeAccessibleToAuthorizedUser() throws Exception {
-            mockMvc.perform(get("/home"))
+        @DisplayName("The index page / should show certain content ONLY to logged-in users.")
+        public void indexPageShowsCertainContentOnlyToLoggedInUsers() throws Exception {
+            mockMvc.perform(get("/"))
                     .andDo(print())
                     .andExpect(status().isOk())
-                    .andExpect(content().string(containsString("Your Home Page")));
+                    .andExpect(content().string(containsString("You are authenticated.")))
+                    .andExpect(content().string(not(containsString("Sign In"))));
         }
 
     }
