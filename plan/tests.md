@@ -35,3 +35,11 @@ There are at least three levels of testing possible:
 I definitely intend to add simple unit tests throughout (aka "type 1") and ultimately aspire to running the kind of whole-system tests (aka "type 5").  The types in between, I'm not so sure about.  I'm not sure I fully understand the difference between "type 2" and "type 3".  I intend to use "type 2" test classes for each Controller, until a reason for the other types becomes clear.
 
 Following the example in the guide, I also have a class ApplicationTest.class which tests whether the application even loads.  I frankly don't know what level that operates at, if any, between #1-#4!
+
+## Use of profiles
+
+We run our application using Spring Boot profiles to indicate environments.  For example the Application runs with `--spring.profiles.active=dev` configured.  Implementations of Repository classes are decorated with, e.g., `@Profile("dev")` or `@Profile("prod")` so we can have different implementations autowired for different databases.
+
+In testing, decorate the test class with `@ActiveProfiles("dev")`, at least if they're integration tests that touch the repository beans.
+
+Ideally, use Maven to make sure the database is actually created and ready, before running tests that will touch it.
