@@ -13,7 +13,7 @@ public class AgencyController {
     AgencyService agencyService;
 
     @GetMapping("/api/v1/agency")
-    List<Agency> listAgencies() {
+    public List<Agency> listAgencies() {
         return agencyService.findAll();
     }
 

@@ -53,7 +53,7 @@ class HomeControllerMVCTest {
         @Test
         @DisplayName("Images in the /public folder should be publicly accessible.")
         public void publicFolderShouldBePubliclyAccessible() throws Exception {
-            mockMvc.perform(get("/public/granite.jpg"))
+            mockMvc.perform(get("/public/granite3.jpg"))
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.IMAGE_JPEG));
         }

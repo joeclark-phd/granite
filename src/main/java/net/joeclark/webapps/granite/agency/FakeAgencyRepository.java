@@ -1,11 +1,15 @@
 package net.joeclark.webapps.granite.agency;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
 import java.util.Arrays;
 import java.util.List;
 
+// TODO: create tests of this repository implementation, or actually move this to the testing class hierarchy
+
 @Repository
+@Profile("fake")
 public class FakeAgencyRepository implements AgencyRepository {
 
 
