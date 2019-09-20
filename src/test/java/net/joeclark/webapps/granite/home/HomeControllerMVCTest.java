@@ -77,7 +77,7 @@ class HomeControllerMVCTest {
         }
 
         @Test
-        @DisplayName("The index page / should show certain contanet ONLY to those not logged in.")
+        @DisplayName("The index page / should show certain content ONLY to those not logged in.")
         public void indexPageShowsCertainContentOnlyToThoseNotLoggedIn() throws Exception {
             mockMvc.perform(get("/"))
                     .andDo(print())
