@@ -28,13 +28,14 @@ class HomeControllerMVCTest {
     @MockBean
     private GreetingService service;
 
+    @WithMockUser(value="joe")
     @Test
     public void greetingShouldReturnMessageFromService() throws Exception {
         when(service.greeting()).thenReturn("Bonjour");
         mockMvc.perform(get("/"))
             .andDo(print())
             .andExpect(status().isOk())
-            .andExpect(content().string(containsString("Bonjour World")));
+            .andExpect(content().string(containsString("Bonjour")));
         verify(service,times(1)).greeting(); // verifies that service.greeting() was called once
     }
 

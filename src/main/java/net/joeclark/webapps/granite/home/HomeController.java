@@ -18,10 +18,9 @@ public class HomeController {
 
     /** The homepage for both authenticated and unauthenticated requests, showing different content for each. */
     @GetMapping("/")
-    public String publicIndex( @RequestParam(name="name",required=false,defaultValue="World") String name, Model model ) {
+    public String publicIndex( Model model ) {
         logger.debug("Processing index page request.");
         model.addAttribute("greeting",greetingService.greeting());
-        model.addAttribute("name",name);
         return "index"; // resolves to src/main/resources/templates/index.html
     }
 
