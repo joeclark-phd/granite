@@ -14,39 +14,82 @@
 
 
     <div class="row align-items-center justify-content-sm-center">
-        <div class="col-sm-auto text-center my-3">
+        <div class="col-sm-4 col-md-3 text-center my-3">
             <img src="public/granite3.jpg" class="img-fluid" alt="Granite logo">
-        </div>
-        <div class="col-md-8 col-lg-6 col-xl-5 text-center">
-            <h3><a href="/">Granite</a> Application</h3>
+            <h3 class="my-0"><a href="/">Granite</a> Application</h3>
             <small>Version 0.1-SNAPSHOT</small>
-
+        </div>
+        <div class="col-sm-8 col-md-9 col-xl-8 text-center">
             <div class="card">
-                <div class="card-header bg-primary text-white">Granite Welcome</div>
-                <div class="card-body">
 
-                    <h1 th:text="${greeting}+' '+${name}">Greetings!</h1>
 
-                    <div sec:authorize="isAuthenticated()">
-                        You are authenticated.  Welcome, <span sec:authentication="name">Joe</span>
-                        <form th:action="@{/logout}" method="post">
-                            <input type="submit" value="Sign Out"/>
-                        </form>
-                    </div>
+
+
+
 
                     <div sec:authorize="!isAuthenticated()">
-                        <div class="alert alert-danger" th:if="${param.error}">
-                            Invalid username or password.
+                        <div class="card-header bg-primary text-white">Granite Login</div>
+                        <div class="card-body p-2">
+                            <div class="alert alert-danger" th:if="${param.error}">
+                                Invalid username or password.
+                            </div>
+                            <div class="alert alert-info" th:if="${param.logout}">
+                                You have been logged out.
+                            </div>
+                            <form th:action="@{/login}" method="post">
+                                <div class="form-group row"><label for="username" class="col-form-label col-4">User Name:</label><div class="col-8"><input class="form-control" id="username" type="text" name="username"/></div></div>
+                                <div class="form-group row"><label for="password" class="col-form-label col-4">Password:</label><div class="col-8"><input class="form-control" id="password" type="password" name="password"/></div></div>
+                                <button type="submit" class="btn btn-primary">Sign In</button>
+                            </form>
                         </div>
-                        <div class="alert alert-info" th:if="${param.logout}">
-                            You have been logged out.
-                        </div>
-                        <form th:action="@{/login}" method="post">
-                            <div class="form-group row"><label for="username" class="col-form-label col-4">User Name:</label><div class="col-8"><input class="form-control" id="username" type="text" name="username"/></div></div>
-                            <div class="form-group row"><label for="password" class="col-form-label col-4">Password:</label><div class="col-8"><input class="form-control" id="password" type="password" name="password"/></div></div>
-                            <button type="submit" class="btn btn-primary">Sign In</button>
-                        </form>
                     </div>
+
+
+
+
+
+
+                    <div sec:authorize="isAuthenticated()">
+                        <div class="card-body py-1">
+
+                            <div class="row bg-light align-items-center py-1">
+                                <div class="col text-left"><strong>User:</strong> <span sec:authentication="name">Joe</span></div>
+                                <div class="col-auto"><strong>Date:</strong> <span>8 Sept 2019</span></div>
+                                <div class="col text-right py-1">
+                                    <form th:action="@{/logout}" method="post">
+                                        <input type="submit" class="btn btn-sm btn-secondary" value="Sign Out"/>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <span th:text="${greeting}">Greetings</span> <span sec:authentication="name">User</span>. You are authenticated.
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+
+                            <h2 class="my-3">Main Menu</h2>
+
+                            <div class="my-3">
+                                <div><strong>Begin Here:</strong></div>
+                                <button type="button" class="btn btn-primary">Individual Customers</button>
+                                <button type="button" class="btn btn-primary">Businesses</button>
+                                <button type="button" class="btn btn-primary">Products</button>
+                            </div>
+
+                            <div class="my-3">
+                                <div><strong>SuperUser Functions:</strong></div>
+                                <button type="button" class="btn btn-danger">Manage Users</button>
+                                <button type="button" class="btn btn-danger">Manage Agencies</button>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
 
                 </div>
             </div>
