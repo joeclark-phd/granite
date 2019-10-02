@@ -1,5 +1,6 @@
 package net.joeclark.webapps.granite.home;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -22,6 +23,7 @@ public class HomeControllerIntegrationTest {
     private MockMvc mockMvc;
 
     @Test
+    @DisplayName("The HomeController and GreetingService work together to retrieve a greeting message.")
     public void shouldReturnDefaultMessage() throws Exception {
         this.mockMvc.perform(get("/"))
                 .andDo(print())
