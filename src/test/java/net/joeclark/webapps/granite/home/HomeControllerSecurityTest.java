@@ -63,7 +63,7 @@ class HomeControllerSecurityTest {
     @DisplayName("The index page / should show certain contanet ONLY to those not logged in.")
     public void indexPageShowsCertainContentOnlyToThoseNotLoggedIn() throws Exception {
         mockMvc.perform(get("/"))
-                .andDo(print())
+                //.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Sign In")))
                 .andExpect(content().string(not(containsString("You are authenticated."))));
@@ -74,7 +74,7 @@ class HomeControllerSecurityTest {
     @DisplayName("The index page / should show certain content ONLY to logged-in users.")
     public void indexPageShowsCertainContentOnlyToLoggedInUsers() throws Exception {
         mockMvc.perform(get("/"))
-                .andDo(print())
+                //.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("You are authenticated.")))
                 .andExpect(content().string(not(containsString("Sign In"))));

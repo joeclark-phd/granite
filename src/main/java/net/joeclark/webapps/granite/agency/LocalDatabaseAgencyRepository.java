@@ -14,7 +14,7 @@ import java.util.List;
 // TODO: create tests of correct loading of implementation based on profiles
 
 @Repository
-@Profile("dev")
+@Profile({"dev","test"})
 public class LocalDatabaseAgencyRepository implements AgencyRepository {
 
     @Autowired

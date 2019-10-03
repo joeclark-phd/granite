@@ -17,9 +17,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@ActiveProfiles("dev")
+@ActiveProfiles("test")
 @AutoConfigureMockMvc
-class AgencyControllerIntegrationTest {
+class AgencyControllerIT {
 
     @Autowired
     private MockMvc mockMvc;
@@ -27,7 +27,7 @@ class AgencyControllerIntegrationTest {
     @Test
     public void retrievesAgenciesFromDevDatabase() throws Exception {
         this.mockMvc.perform(get("/api/v1/agency"))
-                    .andDo(print())
+                    //.andDo(print())
                     .andExpect(status().isOk())
                     .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
                     .andExpect(jsonPath("$..agencyName", Matchers.containsInAnyOrder("Joes Sundries","Clark & Sons"))); // a problematic test because it will only pass if those are the ONLY two agencies in the database; obviously passes only for a carefully specified test DB

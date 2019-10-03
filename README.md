@@ -91,22 +91,12 @@ Since code updates may be "out of sync" with database changes, some effort shoul
 
 ## build process
 
-Assuming you have Docker, Maven, and Java 8 installed. (TODO: Make fewer assumptions!)
+I don't have this fully defined at present, since removing the `dockerfile-maven-plugin`.  My intent is to perfect a Docker-based process so you can build, test, and optionally deploy as a container with a snappy one-liner.  Your database will need to exist, and the database connection info will have to be passed in to the container somehow.
 
-The `pom.xml` currently uses the Spotify `dockerfile-maven-plugin` to build an image.  Just enter:
-
-    mvn clean install dockerfile:build
-    
-This creates a docker image called `joeclark77/granite` tagged with the version number, and you can change this all in the POM file.
-
-Currently Maven doesn't yet start the Docker image, run tests, or deploy it to Docker Hub.  I can do that manually with:
-
-    docker push joeclark77/granite
+    <insert one-liner here>
 
 ## try it out
 
-You should be able to do this from anywhere (assuming you have Docker):
+Currently your best bet is to build the application and run `main()` in `Application.java` using an IDE, with `--spring.profiles.active=dev` and a database already running as defined in `application-dev.yml`.
 
-    docker run -t -p 8080:8080 joeclark77/granite:0.1-SNAPSHOT
-
-And check out the web app running at http://localhost:8080. The test user account is `user` and a password will be printed to the console in the server's startup messages.
+Then check out the web app running at http://localhost:8080. The test user account is `joe` and the password is `test`.

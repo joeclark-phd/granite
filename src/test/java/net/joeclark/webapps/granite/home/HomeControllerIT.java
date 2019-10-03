@@ -16,9 +16,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@ActiveProfiles("dev")
+@ActiveProfiles("test")
 @AutoConfigureMockMvc
-public class HomeControllerIntegrationTest {
+public class HomeControllerIT {
 
     @Autowired
     private MockMvc mockMvc;
@@ -28,7 +28,7 @@ public class HomeControllerIntegrationTest {
     @DisplayName("The HomeController and GreetingService work together to retrieve a greeting message.")
     public void shouldReturnDefaultMessage() throws Exception {
         this.mockMvc.perform(get("/"))
-                .andDo(print())
+                //.andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Hello")));
     }

@@ -19,7 +19,13 @@ DDL scripts can be found in the `ddl/` subdirectory.  They are named with a four
 
 My intent is that changes to the database after the first permanent release of Granite will be defined as incremental changes (i.e. CREATE, DROP, and ALTER TABLE) in sequentially-numbered files.  This gives us version control over the database schema; running all the files up to any point in the version history of this repo will give us the database that existed at that point.  These could be considered *migration* files.  You may consider also creating *downgrade* files that reverse each incremental change, to be used if we wish to revert the database to an earlier version, but I think that may be a lot of extra work for little benefit.
 
-I'd like to employ Docker to generate a brand-new database from scratch, using these DDL files, when building Granite on a test server.  That ensures that the latest version of the code works with the latest version of the database (and that no other database changes are being done on the side, without being version controlled).
+We now use the `docker-maven-plugin` to generate a brand-new database from scratch, using these DDL files, when building Granite on a test server.  That ensures that the latest version of the code works with the latest version of the database (and that no other database changes are being done on the side, without being version controlled).  The `Dockerfile` in this directory defines the basic parameters.  SQL or shell files copied into the container's `docker-entrypoint-initdb.d/` directory will be run in alphabetical order when the container is first started, so the naming convention is to start with a four-digit number keeping your updates in the proper order, then add any descriptive name you like, e.g.:
+
+    0001_creation.sql
+    0002_add_awesome_new_tables.sql
+    ...
+
+To the lucky developer who needs to make the 10,000th update: I'm sure you can figure out a way to add a fifth digit to all the existing filenames and bill your client extra for it.
 
 I assume that the production database will not be under the control of the development team, so the production database will not be updated directly from this repo.  After successful testing, the DBA will receive the DDL files from this repo, with confidence that they have been tested, and run the DDL scripts in production.
 

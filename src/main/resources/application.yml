@@ -3,7 +3,9 @@
 
 logging:
   level:
+    root: INFO
     web: INFO
+    org.springframework: INFO
     net.joeclark.webapps.granite: INFO
 
 spring:

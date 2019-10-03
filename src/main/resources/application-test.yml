@@ -1,0 +1,17 @@
+# Settings for the 'test' profile intended to be used with automated tests.
+# During integration test phase (i.e., mvn verify), a freshly-built test database which will be spun up using the docker-maven-plugin.
+
+# Log nothing!
+logging:
+  level:
+    root: OFF
+    web: OFF
+    org.springframework: OFF
+    net.joeclark.webapps.granite: OFF
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/granite
+    username: granite
+    password: test
+

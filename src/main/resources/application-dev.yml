@@ -4,7 +4,9 @@
 # Log everything!
 logging:
   level:
-    web: TRACE
+    root: SEVERE
+    web: DEBUG
+    org.springframework: INFO
     net.joeclark.webapps.granite: TRACE
 
 spring:
