@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class ApplicationIT {
+class ApplicationSmokeTest {
 
     @Autowired
     private HomeController homeController;

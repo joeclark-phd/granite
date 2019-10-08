@@ -53,3 +53,18 @@ Two options:
   - I think this requires more of the computer running the tests; at a minimum, they must have Docker configured and perhaps associated with whatever IDE they're using.  It may be trickier for CI servers.  I was hoping to eventually containerize the whole build/test process, for example using Maven in a container, and this seems like it would be messier.
   
  The first option is currently implemented.  After this commit, I'm going to attempt the second approach.
+ 
+ ### More on the above
+ 
+ I have now rigged up AgencyControllerIntegrationTest to use Testcontainers.  This has turned up a couple of new problems:
+ 
+ - Testcontainers wants a generic Postgres image to create a PostgreSQLContainer, not a customized on like mine with specified username, password, and with a directory of init scripts.  I am forced instead to create a GenericContainer but this is clunkier + requires more boilerplate code.
+ 
+   - It may be possible to trick Testcontainers into thinking my image is a Postgres image, but I'm not sure yet.
+   
+ - I cannot easily build the image on the fly with Testcontainers.  It can be done, but you have to pass a filesystem path or classpath to the Dockerfile, and I don't think that would be consistent across machines.  Also, I'd have to move this "/database" directory down into /src/test/resources/... or somewhere, which I oppose.  The database is more than just a "stub" or other resource.  I am therefore *manually* generating new versions of the database's image, and pushing them to Dockerhub.  Testcontainers pulls them down from there.
+ 
+   - Maybe it's possible to use the docker-maven-plugin to re-build and push the image before the test phase.  That would help with, e.g., consistency in naming.
+   - Another issue is that the image name and version is specified in the test class.  Ideally it could be pulled in from a property.
+   
+I'll leave all this thinking-out-loud here until I find a resolution that I like.
