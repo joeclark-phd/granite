@@ -29,4 +29,27 @@ To the lucky developer who needs to make the 10,000th update: I'm sure you can f
 
 I assume that the production database will not be under the control of the development team, so the production database will not be updated directly from this repo.  After successful testing, the DBA will receive the DDL files from this repo, with confidence that they have been tested, and run the DDL scripts in production.
 
-An optional step would be to run the application's code on a staging server after the testing server.  The staging server would use a staging database managed by the DBA, so the *new* code could be tested with the *old* database schema, so you could confirm that it fails gracefully rather than crashing.  Thereafter, operations could push code to production and *then* update the production database, rather than having to try to make both changes in production simultaneously.  
+An optional step would be to run the application's code on a staging server after the testing server.  The staging server would use a staging database managed by the DBA, so the *new* code could be tested with the *old* database schema, so you could confirm that it fails gracefully rather than crashing.  Thereafter, operations could push code to production and *then* update the production database, rather than having to try to make both changes in production simultaneously.
+
+### Two options for database testing
+
+As a summary of my goals:
+
+- I want to be able to spin up a freshly-generated database during testing, either locally or on a CI server.
+- I also want to be able to run the application normally, on my dev machine, on a test server, or a production server, with a different database for each environment.
+- I want the build process to be independent of local things like IDE settings.
+
+Two options:
+
+- Using the `docker-maven-plugin` to spin up a test database on localhost:5432 for the integration-test phase of the maven build.  Database connection is defined in `application-test.yml` (for the "test" Spring profile; there are other profiles such as "dev" for regular running of the app on my local computer).  The upsides here are that it is all run by Maven, hence independent of my environment and potentially very scriptable on, say, a CI server; and that the database connection is specified the same way for tests and for normal operation, in one of the `application-*.yaml` files.  The drawbacks are:
+
+  - IntelliJ can run the tests [but can't give me test-by-test output](https://stackoverflow.com/questions/58222014/how-to-visualize-output-of-junit-integration-tests-in-intellij-when-using-docker) because the tests don't run in the "test" phase.  I don't want to be too dependent on my IDE but this is a very nice feature and they all should have it.
+  - The Dockerfile and the database connection specifications are in two different locations from each other and from the test, making it maybe less clear what's being tested.
+  - This may preclude me from using the `docker-maven-plugin` from doing something *else* useful, like building an image of my project itself at the end of the Maven lifecycle.
+
+- Alternatively I could use [TestContainers](https://www.testcontainers.org/) to build and run docker containers from within JUnit test classes.  This has the advantage of doing the integration tests in the same "phase" as the unit tests, and letting me run them directly via the IDE instead of using Maven.  I do want it all to work with Maven but it's also nice to use the IDE to run specific subsets of tests.  With TestContainers I can get that test-by-test feedback from IntelliJ.  Also, it combines database connection code and container specification within the test classes, for maximum readability.  Finally, it frees up the `docker-maven-plugin` for other uses, such as packaging my application itself.  The drawbacks:
+
+  - The tests may connect to the database in a different way from the regular application.  I'll need to figure out how to establish the database connection in an understandable way for both contexts (testing and running).
+  - I think this requires more of the computer running the tests; at a minimum, they must have Docker configured and perhaps associated with whatever IDE they're using.  It may be trickier for CI servers.  I was hoping to eventually containerize the whole build/test process, for example using Maven in a container, and this seems like it would be messier.
+  
+ The first option is currently implemented.  After this commit, I'm going to attempt the second approach.
