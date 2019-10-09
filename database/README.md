@@ -13,7 +13,7 @@ I then log into the container and use `psql` interactively to create the tables 
     docker exec -it myGraniteDB bash
     # psql -U postgres
 
-DDL scripts can be found in the `ddl/` subdirectory.  They are named with a four-digit number prefix followed by meaningful text, so they can be sorted alphabetically but still give clues to their purposes. The first script is `0001_creation.sql`.  For now, I am pasting the code into `psql` interactively.
+DDL scripts can be found in the `ddl/` subdirectory.  They are named with a four-digit number prefix followed by meaningful text, so they can be sorted alphabetically but still give clues to their purposes. The first script is `0001_creation.sql`.  At first, I just pasted the code into `psql` interactively.
 
 ### A custom image
 
@@ -60,7 +60,7 @@ Two options:
  
  I have now rigged up AgencyControllerIntegrationTest to use Testcontainers.  This has turned up a couple of new problems:
  
- - Testcontainers wants a generic Postgres image to create a PostgreSQLContainer, not a customized on like mine with specified username, password, and with a directory of init scripts.  I am forced instead to create a GenericContainer but this is clunkier + requires more boilerplate code.
+ - Testcontainers wants a generic Postgres image to create a PostgreSQLContainer, not a customized one like mine with specified username, password, and with a directory of init scripts.  I am forced instead to create a GenericContainer but this is clunkier + requires more boilerplate code.
  
    - It may be possible to trick Testcontainers into thinking my image is a Postgres image, but I'm not sure yet.
    
