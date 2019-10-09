@@ -1,7 +1,6 @@
 package net.joeclark.webapps.granite.agency;
 
 import org.hamcrest.Matchers;
-import org.junit.Rule;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -13,12 +12,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.images.builder.ImageFromDockerfile;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+
+import java.nio.file.Paths;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -34,11 +33,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class AgencyControllerIntegrationTest {
 
     @Container
-    // spin up a fresh database in a docker container just for the tests below
-    private static final GenericContainer dbContainer = new GenericContainer("joeclark77/granite-db:0.1-SNAPSHOT").withExposedPorts(5432);
+    // Spin up a fresh database in a docker container just for the tests below
+    private static final GenericContainer dbContainer = new GenericContainer(
+            new ImageFromDockerfile().withFileFromPath(".", Paths.get("./database")) // Re-generate the database image at test time, so it always reflects the latest changes
+    ).withExposedPorts(5432);
 
 
-    // This static child class retrieves information about the temporary database containers so that tests in this class can use them.
+    // This static child class overrides the default database configuration to connect us to the temporary test database.
     static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
         @Override
         public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
