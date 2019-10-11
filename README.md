@@ -91,12 +91,20 @@ Since code updates may be "out of sync" with database changes, some effort shoul
 
 ## build process
 
-I don't have this fully defined at present, since removing the `dockerfile-maven-plugin`.  My intent is to perfect a Docker-based process so you can build, test, and optionally deploy as a container with a snappy one-liner.  Your database will need to exist, and the database connection info will have to be passed in to the container somehow.
+The Maven build process:
+- compiles the code (`mvn compile`) and tests (`mvn test-compile`)
+- runs automated tests (including some tests that spin up temporary databases in Docker containers to test the app's integration with its back-end) (`mvn test`)
+- builds Docker images for Granite and its database (`mvn package`)
+- pushes those Docker images to Dockerhub (`mvn deploy`)
 
-    <insert one-liner here>
+To try it out for yourself, from this directory try `mvn clean test`.
 
-## try it out
+## Try it out
 
-Currently your best bet is to build the application and run `main()` in `Application.java` using an IDE, with `--spring.profiles.active=dev` and a database already running as defined in `application-dev.yml`.
+You can build the application and run `main()` in `Application.java` using an IDE, with `--spring.profiles.active=dev` and a database already running as defined in `application-dev.yml`.
+
+Alternatively, you can use Docker to run my latest version, like so:
+
+    docker container run -d -p 8080:8080 joeclark77/granite:latest
 
 Then check out the web app running at http://localhost:8080. The test user account is `joe` and the password is `test`.

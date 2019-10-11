@@ -1,69 +1,73 @@
-## Database README
+## Granite's Database Backend
 
-### Manual creation of database
+Granite employs a PostgreSQL back end.  The URL, username, and password of the database are specified in [`application.yaml`](https://github.com/joeclark-phd/granite/blob/master/src/main/resources/application.yml) and it is expected that you'll override them in profile-specific configuration files, e.g., `application-prod.yaml`.
 
-How the database(s) work is still being figured out.  There are a lot of notes in this README and some are out of date.
+The `Dockerfile` in this directory defines the basic parameters for building a new instance the database with an up-to-date schema, based on one of official Docker [postgres](https://hub.docker.com/_/postgres) images.  To spin one up in your local environment, if you have Docker installed you should be able to do this:
 
-I am able to create a Postgres database in a Docker container (without installing Postgres or any of its tools locally) with this command on my Windows laptop:
+    docker container run -d -p 5432:5432 --name myGraniteDB joeclark77/granite-db:latest
 
-    docker run -p 5432:5432 --name myGraniteDB -e POSTGRES_PASSWORD=root -d postgres
+### Evolving the database schema
 
-I then log into the container and use `psql` interactively to create the tables and load them with data.
+The Docker image contains all files from the `ddl/` directory.  These scripts run in alphabetical order when a new container is first launch, and they build up the database schema to its latest form.  
 
-    docker exec -it myGraniteDB bash
-    # psql -U postgres
-
-DDL scripts can be found in the `ddl/` subdirectory.  They are named with a four-digit number prefix followed by meaningful text, so they can be sorted alphabetically but still give clues to their purposes. The first script is `0001_creation.sql`.  At first, I just pasted the code into `psql` interactively.
-
-### A custom image
-
-The `Dockerfile` in this directory defines the basic parameters for building a custom image based on one of the Docker Hub "library" Postgres images.  It copies all files from the `ddl/` directory into the container's `docker-entrypoint-initdb.d/` directory, and these will be run in alphabetical order when the container is first started, so the naming convention is to start with a four-digit number keeping your updates in the proper order, then add any descriptive name you like, e.g.:
+It is *not* assumed that the production database will be under the control of the development team, and *not* assumed that your DBA will use Docker.
+  
+To evolve the database, you will want to provide your DBA with a "migration script" containing just the incremental changes for the latest update (i.e. `CREATE`, `DROP`, and `ALTER TABLE` statements).  Therefore, to change the database, *leave the existing scripts alone* and add a new one!  The naming convention is that each script start with four numeric digits to keep them in order:
 
     0001_creation.sql
     0002_add_awesome_new_tables.sql
     ...
 
-To the lucky developer who needs to make the 10,000th update: I'm sure you can figure out a way to add a fifth digit to all the existing filenames and bill your client extra for it.
+After successful testing, the DBA will receive the migration script from this repo, with confidence that it has been tested (more on testing below), and can run the script in production.
 
-I assume that the production database will not be under the control of the development team, so the production database will not be updated directly from this repo.  After successful testing, the DBA will receive the DDL files from this repo, with confidence that they have been tested, and run the DDL scripts in production.
+### Building a new database image
 
-My intent is that changes to the database after the first permanent release of Granite will be defined as incremental changes (i.e. CREATE, DROP, and ALTER TABLE) in sequentially-numbered files.  This gives us version control over the database schema; running all the files up to any point in the version history of this repo will give us the database that existed at that point.  These could be considered *migration* files.  You may consider also creating *downgrade* files that reverse each incremental change, to be used if we wish to revert the database to an earlier version, but I think that may be a lot of extra work for little benefit.
+To build a new version of the database's Docker image, from this working directory try a command like this:
 
-You can manually build an image from this directory like so:
+    docker image build -t joeclark77/granite-db:latest .
+    
+You could even push it to Dockerhub with:
 
-    docker image build -t joeclark77/granite-db:0.1-SNAPSHOT .
-
-### Two options for database testing
-
-As a summary of my goals:
-
-- I want to be able to spin up a freshly-generated database during testing, either locally or on a CI server.
-- I also want to be able to run the application normally, on my dev machine, on a test server, or a production server, with a different database for each environment.
-- I want the build process to be independent of local things like IDE settings.
-
-Two options:
-
-- Using the `docker-maven-plugin` to spin up a test database on localhost:5432 for the integration-test phase of the maven build.  Database connection is defined in `application-test.yml` (for the "test" Spring profile; there are other profiles such as "dev" for regular running of the app on my local computer).  The upsides here are that it is all run by Maven, hence independent of my environment and potentially very scriptable on, say, a CI server; and that the database connection is specified the same way for tests and for normal operation, in one of the `application-*.yaml` files.  Another benefit is that the database image is always named according to a strict naming convention, if I want to push it to Docker Hub or another registry as part of the build.  The drawbacks are:
-
-  - IntelliJ can run the tests [but can't give me test-by-test output](https://stackoverflow.com/questions/58222014/how-to-visualize-output-of-junit-integration-tests-in-intellij-when-using-docker) because the tests don't run in the "test" phase.  I don't want to be too dependent on my IDE but this is a very nice feature and they all should have it.
-  - The Dockerfile and the database connection specifications are in two different locations from each other and from the test, making it maybe less clear what's being tested.
-  - This may preclude me from using the `docker-maven-plugin` from doing something *else* useful, like building an image of my project itself at the end of the Maven lifecycle.
-
-- Alternatively I could use [TestContainers](https://www.testcontainers.org/) to build and run docker containers from within JUnit test classes.  This has the advantage of doing the integration tests in the same "phase" as the unit tests, and letting me run them directly via the IDE instead of using Maven.  I do want it all to work with Maven but it's also nice to use the IDE to run specific subsets of tests.  With TestContainers I can get that test-by-test feedback from IntelliJ.  Also, it combines database connection code and container specification within the test classes, for maximum readability.  Finally, it frees up the `docker-maven-plugin` for other uses, such as packaging my application itself.  The drawbacks:
-
-  - The tests may connect to the database in a different way from the regular application.  I'll need to figure out how to establish the database connection in an understandable way for both contexts (testing and running).
-  - I think this requires more of the computer running the tests; at a minimum, they must have Docker configured and perhaps associated with whatever IDE they're using.  It may be trickier for CI servers.  I was hoping to eventually containerize the whole build/test process, for example using Maven in a container, and this seems like it would be messier.
-  
- I tried the first approach (commit [e887d66](https://github.com/joeclark-phd/granite/tree/e887d661a232d7b4d0b7071adf6dbba63454789a) was the last commit using it).  Now I use the second.
+    docker push joeclark77/granite-db:latest
  
- ### More on the above
- 
- I have now rigged up AgencyControllerIntegrationTest to use Testcontainers.  This has turned up a couple of new problems:
- 
- - Testcontainers wants a generic Postgres image to create a PostgreSQLContainer, not a customized one like mine with specified username, password, and with a directory of init scripts.  I am forced instead to create a GenericContainer but this is clunkier + requires more boilerplate code.
- 
-   - It may be possible to trick Testcontainers into thinking my image is a Postgres image, but I'm not sure yet.
-   
- - I *can* build the image on the fly with Testcontainers, but you have to pass a filesystem path or classpath to the Dockerfile, and I don't know if that will work consistently across machines. 
- 
- - I find that I want to use Testcontainers' JDBC URL connection approach, so I can cut 15 or more lines of code out of each test class (see [AgencyControllerIntegrationTest.java](https://github.com/joeclark-phd/granite/blob/master/src/test/java/net/joeclark/webapps/granite/agency/AgencyControllerIntegrationTest.java)), but I think you have to use a "library" postgres image for that.
+I don't generally do this manually, though, because I have configured the Maven build process to build the latest image and push it to Dockerhub during the 'deploy' phase, using the Maven artifact's version number.  This keeps version numbers of the [granite-db](https://cloud.docker.com/repository/docker/joeclark77/granite-db) image in sync with version numbers of the Java project's [granite](https://cloud.docker.com/repository/docker/joeclark77/granite) image.
+
+### Testing with the database
+
+The Java project contains a suite of automated tests.  Some of these test code that hits the database.  Those tests use the [Testcontainers](https://www.testcontainers.org/) library to spin up temporary test database containers, using Docker, for the duration of one or more tests.  This requires a fair amount of code to be added to the beginning of the test class; see for example this code from [AgencyControllerIntegrationTest.java](https://github.com/joeclark-phd/granite/blob/master/src/test/java/net/joeclark/webapps/granite/agency/AgencyControllerIntegrationTest.java):
+
+```
+@Testcontainers // We'll use testcontainers to spin up a database in Docker to test with.
+@ContextConfiguration(initializers = { AgencyControllerIntegrationTest.Initializer.class }) // The child class Initializer dynamically loads DB connection properties as environment variables.
+@SpringBootTest
+@AutoConfigureMockMvc
+class AgencyControllerIntegrationTest {
+
+
+    @Container
+    // Spin up a fresh database in a docker container just for the tests below
+    private static final GenericContainer dbContainer = new GenericContainer(
+            new ImageFromDockerfile().withFileFromPath(".", Paths.get("./database")) // Re-generate the database image at test time, so it always reflects the latest changes
+    ).withExposedPorts(5432);
+
+
+    // This static child class overrides the default database configuration to connect us to the temporary test database.
+    static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+        @Override
+        public void initialize(ConfigurableApplicationContext configurableApplicationContext) {
+            TestPropertyValues.of(
+                    "spring.datasource.url=" + "jdbc:postgresql://" + dbContainer.getContainerIpAddress() + ":" + dbContainer.getFirstMappedPort() + "/granite",
+                    "spring.datasource.username=" + "granite",
+                    "spring.datasource.password=" + "test"
+            ).applyTo(configurableApplicationContext.getEnvironment());
+        }
+    }
+
+    ...(test cases)...
+```
+
+I've concluded that, even though this is quite a bit to copy and paste, it beats alternative configuration methods because it makes explicit what it's doing, right within the test class.
+
+Note that Testcontainers will spin up temporary databases directly from the `Dockerfile` and DDL scripts in this directory, *not* by pulling a version from Dockerhub.  Therefore, you are testing whether your latest changes to the Java code work with your latest changes to the database.  That's a key reason for having both the code and the database together in version control.
+
+TODO: You may want to find out how also to test *new* code with an *older* schema, or vice versa, if the app and the database aren't always being updated at the same time.  This could be part of a CI process.

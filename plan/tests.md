@@ -36,28 +36,12 @@ I definitely intend to add simple unit tests throughout (aka "type 1") and ultim
 
 Following the example in the guide, I also have a class ApplicationTest.class which tests whether the application even loads.  I frankly don't know what level that operates at, if any, between #1-#4!
 
-My "type 3" tests now need a test database to be set up and running on localhost or they will fail.  My next objective is to figure out how to automate this with Docker and a tool like TestContainers.
+My "type 3" tests now use TestContainers to spin up a temporary test database in a Docker container.  See the [Granite's Database Backend] for more on how it works.
 
 ## Use of profiles
 
 We run our application using Spring Boot profiles to indicate environments.  For example the Application runs with `--spring.profiles.active=dev` configured.  Implementations of Repository classes are decorated with, e.g., `@Profile("dev")` or `@Profile("prod")` so we can have different implementations autowired for different databases.
 
-In testing, decorate the test class with `@ActiveProfiles("test")`, at least if they're integration tests that touch the repository beans.
-
 ## REST endpoint tests
 
 A first REST endpoint test is coded in `AgencyControllerIntegrationTest.java`.  It combines `MockMvc` with a path expression syntax called [`jsonpath`](https://github.com/dchester/jsonpath) to inspect the contents of responses.
-
-## Separation of integration tests
-
-The project now uses the `maven-failsafe-plugin` to separate out tests that access a database into the Maven *integration-test* phase, and the `docker-maven-plugin` to spin up a test database before that phase and tear it down afterwards.  Tests in this category could be caled "integration tests" and are distinguished by test classes with names ending in "IT".
-
-To run just the unit tests that don't need the database:
-
-    mvn clean test
-
-To run the integration tests with the test database as well:
-
-    mvn clean verify
-
-This requires that you have Docker installed, of course, and you may have to clean up your docker environment beforehand.  Make sure no other container has claimed the host's port 5432, for example, and shut down any containers left over from prior manual runs.
