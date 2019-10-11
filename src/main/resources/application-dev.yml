@@ -4,14 +4,13 @@
 # Log everything!
 logging:
   level:
-    root: SEVERE
-    web: DEBUG
-    org.springframework: INFO
+    root: INFO
+    org.springframework: DEBUG
     net.joeclark.webapps.granite: TRACE
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
-    username: postgres
-    password: root
+    url: jdbc:postgresql://localhost:5432/granite
+    username: granite
+    password: test
 

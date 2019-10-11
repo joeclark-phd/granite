@@ -3,11 +3,16 @@
 
 logging:
   level:
-    root: INFO
-    web: INFO
+    root: WARN
     org.springframework: INFO
-    net.joeclark.webapps.granite: INFO
+    net.joeclark: DEBUG
 
 spring:
   thymeleaf:
     cache: false
+  datasource:
+    # Default datasource for local testing. Override in an environment-specific config file, e.g. application-prod.yaml
+    # Some of our automated tests need at least the 'url' line to be here, even if the database doesn't actually exist.
+    url: jdbc:postgresql://localhost:5432/granite
+    username: granite
+    password: test

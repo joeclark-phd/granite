@@ -9,7 +9,6 @@ import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.GenericContainer;
@@ -26,7 +25,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Testcontainers // We'll use testcontainers to spin up a database in Docker to test with.
-@ActiveProfiles("test")  // Properties such as spring.datasource.url are loaded from application-test.yml. They'll be overridden, below, but without this line the test will not start.
 @ContextConfiguration(initializers = { AgencyControllerIntegrationTest.Initializer.class }) // The child class Initializer dynamically loads DB connection properties as environment variables.
 @SpringBootTest
 @AutoConfigureMockMvc
