@@ -7,6 +7,7 @@
     <groupId>net.joeclark.webapps</groupId>
     <artifactId>granite</artifactId>
     <version>0.1-SNAPSHOT</version>
+    <packaging>docker-build</packaging>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -150,7 +151,7 @@
                 <executions>
                     <execution>
                         <id>unpack</id>
-                        <phase>package</phase>
+                        <phase>prepare-package</phase>
                         <goals>
                             <goal>unpack</goal>
                         </goals>
@@ -165,6 +166,37 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.31.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <images>
+                        <image>
+                            <name>${docker.image.prefix}/%a-db</name>
+                            <build>
+                                <contextDir>${project.basedir}/database</contextDir>
+                                <tags>
+                                    <tag>${project.version}</tag>
+                                    <tag>latest</tag>
+                                </tags>
+                            </build>
+                        </image>
+                        <image>
+                            <name>${docker.image.prefix}/%a</name>
+                            <build>
+                                <contextDir>${project.basedir}</contextDir>
+                                <tags>
+                                    <tag>${project.version}</tag>
+                                    <tag>latest</tag>
+                                </tags>
+                            </build>
+                        </image>
+                    </images>
+                </configuration>
             </plugin>
 
         </plugins>
