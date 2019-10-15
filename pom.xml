@@ -79,6 +79,7 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Testcontainers is used to spin up dependencies (i.e. a database) in Docker containers during testing -->
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers</artifactId>
@@ -146,29 +147,25 @@
             </plugin>
 
             <plugin>
+                <!-- downloads dependencies to target/dependency so they can be added separately to the Docker image -->
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>unpack</id>
-                        <phase>prepare-package</phase>
+                        <id>copy-dependencies</id>
+                        <phase>process-sources</phase>
                         <goals>
-                            <goal>unpack</goal>
+                            <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>${project.groupId}</groupId>
-                                    <artifactId>${project.artifactId}</artifactId>
-                                    <version>${project.version}</version>
-                                </artifactItem>
-                            </artifactItems>
+                            <includeScope>runtime</includeScope>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
 
             <plugin>
+                <!-- generates Docker images for the app itself and also for the database -->
                 <groupId>io.fabric8</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
                 <version>0.31.0</version>
