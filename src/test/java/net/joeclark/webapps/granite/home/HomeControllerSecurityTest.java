@@ -9,6 +9,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import javax.sql.DataSource;
+
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -21,6 +23,9 @@ class HomeControllerSecurityTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private DataSource dataSource;
 
     @MockBean
     private GreetingService service;

@@ -2,11 +2,19 @@ package net.joeclark.webapps.granite.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import javax.sql.DataSource;
 
 
 @Configuration
@@ -29,6 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
             .formLogin()
                 .loginPage("/login").permitAll() // Login will often come from the homepage ("/") but if an unauthenticated user tries to directly access another page, they'll see this login page.
+                .defaultSuccessUrl("/")
                 .and()
             .logout()
                 .logoutUrl("/logout") // I think this is the default, but I like to have it made explicit.
@@ -42,5 +51,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         logger.debug("Executed custom security configuration for Granite project.");
     }
 
+    @Autowired
+    private DataSource dataSource;
+
+    @Override
+    public void configure(AuthenticationManagerBuilder builder) throws Exception {
+        builder .jdbcAuthentication()
+                .dataSource(dataSource)
+                .withUser(User.withUsername("admin").password(passwordEncoder().encode("pass")).roles("SUPER"));
+        logger.debug("Configured app to use JDBC authentication with default database.");
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
 }
