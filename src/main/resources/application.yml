@@ -18,4 +18,4 @@ spring:
     url: jdbc:postgresql://192.168.0.1:5432/granite
     username: granite
     password: test
-    initialization-mode: always
+    initialization-mode: always  # @WebMVCTest tests fail if this line isn't here
