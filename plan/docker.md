@@ -2,7 +2,27 @@
 
 Docker is a new tool for me and I am exploring ways it can be used to simplify building, testing, deployment, etc.
 
-## What we currently do
+## TL/DR: How to run the app with Docker
+
+First, create a network for the database container and application container to be able to see each other.  You only need to do this once:
+
+    docker network create -d bridge --subnet 192.168.0.0/24 --gateway 192.168.0.1 mynet
+    
+Next, spin up a database in a background container:
+
+    docker container run -d -p 5432:5432 --net=mynet --name myGraniteDB joeclark77/granite-db:latest
+    
+Now, spin up the application in a container:
+
+    docker container run -p 8080:8080 --net=mynet joeclark77/granite:latest
+
+Now you can point your browser at localhost:8080 and use the application.  Two users are initialized by default: `admin` with password `super` and SUPER privileges, and `joe` with password `pass` and AGENT privileges.
+
+If you want to log into the database console with `psql`, do this:
+
+    docker exec -it myGraniteDB psql -U granite
+
+## Current uses of Docker
 
 - The application and its database are published as Docker images.  I use the **fabric8** `docker-maven-plugin` to build both images in the Maven *package* phase and to push them to Dockerhub in the *deploy* phase.  The images are [joeclark77/granite](https://cloud.docker.com/u/joeclark77/repository/docker/joeclark77/granite) and [joeclark77/granite-db](https://cloud.docker.com/u/joeclark77/repository/docker/joeclark77/granite-db).
   
@@ -10,10 +30,10 @@ Docker is a new tool for me and I am exploring ways it can be used to simplify b
 
 - I use the [**Testcontainers**](https://www.testcontainers.org/) library to spin up database instances in containers during automated testing.  More details on how to write these tests can be found under [Testing with the Database](https://github.com/joeclark-phd/granite/tree/master/database#testing-with-the-database).
 
-## What I have tried but didn't keep
+## Other things I have tried but didn't keep
 
 - For automated testing with Docker, my first approach was to use the **fabric8** `docker-maven-plugin` to create a Docker instance of the database for Maven's *integration-test* phase.  You can see how this was done by inspecting pom.xml and other files at [commit e887d66](https://github.com/joeclark-phd/granite/tree/e887d661a232d7b4d0b7071adf6dbba63454789a).  I switched to using Testcontainers for a few reasons:
-  - The Testcontainers approach puts its code and configuration all in the same place--the test class--rather than splitting it between application.yaml, pom.xml, and the test class.  It's more verbose and requires more copy-pasting, but is also more transparent.
+  - The Testcontainers approach puts its code and configuration all in the same place--the test class--rather than splitting it between `application.yaml`, `pom.xml`, and the test class.  It's more verbose and requires more copy-pasting, but is also more transparent.
   - The integration tests in the first approach could only be run by Maven, whereas the Testcontainers-based tests can be run in my IDE.
   - I wanted to use the `docker-maven-plugin` to build the project itself, and it didn't seem to support building one image in one phase and another image in another phase.
 

@@ -57,8 +57,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(AuthenticationManagerBuilder builder) throws Exception {
         builder .jdbcAuthentication()
-                .dataSource(dataSource)
-                .withUser(User.withUsername("admin").password(passwordEncoder().encode("pass")).roles("SUPER"));
+                .dataSource(dataSource);
         logger.debug("Configured app to use JDBC authentication with default database.");
     }
 

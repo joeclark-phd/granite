@@ -1,6 +1,6 @@
 
 
--- users+authorities schema based on Spring Boot default schema
+-- Users+authorities schema based on Spring Boot default schema
 ---------------------------------------------------------------------------------------------------
 drop table if exists authorities;
 drop table if exists users;
@@ -15,6 +15,17 @@ create table authorities(
     primary key (username, authority)
 );
 ---------------------------------------------------------------------------------------------------
+-- Default accounts for testing.  Passwords are BCrypt hashed (prefix must be $2a).
+-- You can use, for example, https://www.browserling.com/tools/bcrypt to generate hashes.
+---------------------------------------------------------------------------------------------------
+-- admin : super
+insert into users (username, password, enabled) values ('admin','$2a$10$UxM6Ypl9VGVLhAflRO5LX.oxqkTVdG94fLFOqt8UpAGcc76eZA5di',true);
+insert into authorities (username, authority) values ('admin','ROLE_SUPER');
+-- joe : pass
+insert into users (username, password, enabled) values ('joe','$2a$10$YhQsADh6XDhJ8jQmP8xgc.9cjbRiQ3qBpTEAH.yGJX/yyoK..gHcW',true);
+insert into authorities (username, authority) values ('joe','ROLE_AGENT');
+---------------------------------------------------------------------------------------------------
+
 
 
 

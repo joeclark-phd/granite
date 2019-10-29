@@ -81,7 +81,7 @@ Since code updates may be "out of sync" with database changes, some effort shoul
 - [Security vulnerability scanning tools]
 - Maven
   - for build automation and dependency management
-- Docker
+- [Docker](plan/docker.md)
   - to package the application for easy deployment
 - Git/Github
   - `git` is good, but with Github as a front-end it's far more valuable than any other VCS.  Github allows hooking into continuous integration, static analysis, and other 3rd party tools.
@@ -103,8 +103,6 @@ To try it out for yourself, from this directory try `mvn clean test`.
 
 You can build the application and run `main()` in `Application.java` using an IDE, with `--spring.profiles.active=dev` and a database already running as defined in `application-dev.yml`.
 
-Alternatively, you can use Docker to run my latest version, like so:
-
-    docker container run -d -p 8080:8080 joeclark77/granite:latest
+Alternatively, you can use Docker to spin up both a test database and an instance of the app.  See my [Docker README](plan/docker.md) for instructions.
 
 Then check out the web app running at http://localhost:8080. The test user account is `joe` and the password is `test`.

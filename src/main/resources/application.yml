@@ -11,9 +11,11 @@ spring:
   thymeleaf:
     cache: false
   datasource:
-    # Default datasource for local testing. Override in an environment-specific config file, e.g. application-prod.yaml
-    # Some of our automated tests need at least the 'url' line to be here, even if the database doesn't actually exist.
+    # Default datasource for testing within a Docker network. Override in an environment-specific config file, e.g.
+    # application-dev.yaml which uses 'localhost' as the host name, or an application-prod.yaml for your real database.
+    # (NB: Some of our automated tests need the 'url' line to be here, even if the database doesn't actually exist.)
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/granite
+    url: jdbc:postgresql://192.168.0.1:5432/granite
     username: granite
     password: test
+    initialization-mode: always
