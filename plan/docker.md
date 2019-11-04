@@ -2,7 +2,21 @@
 
 Docker is a new tool for me and I am exploring ways it can be used to simplify building, testing, deployment, etc.
 
-## TL/DR: How to run the app with Docker
+## TL/DR: How to run the app and database locally with Docker
+
+First, spin up a database in a background container:
+
+    docker container run -d -p 5432:5432 --name myGraniteDB joeclark77/granite-db:latest
+    
+Now, spin up an application in a container, *linking* it to the database container and setting the database connection info via environment variables
+
+    docker container run -p 8080:8080 --link myGraniteDB:myGraniteDB 
+      -e POSTGRES_DB_URL='jdbc:postgresql://myGraniteDB:5432/granite' 
+      -e POSTGRES_DB_USERNAME='granite' 
+      -e POSTGRES_DB_PASSWORD='test' 
+      joeclark77/granite:latest
+
+## TL/DR: How to run the app with Docker (DB and app in a Docker network)
 
 First, create a network for the database container and application container to be able to see each other.  You only need to do this once:
 
@@ -13,6 +27,7 @@ Next, spin up a database in a background container:
     docker container run -d -p 5432:5432 --net=mynet --name myGraniteDB joeclark77/granite-db:latest
     
 Now, spin up the application in a container:
+**This doesn't work at present because I've changed the default `application.yml` to look for database connection info in environment variables.  You need to tell the container to start with `application-test.yml` and I haven't figured that out yet.** 
 
     docker container run -p 8080:8080 --net=mynet joeclark77/granite:latest
 

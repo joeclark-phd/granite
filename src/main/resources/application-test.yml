@@ -1,4 +1,4 @@
-# Settings for the 'dev' profile intended to be used on the developer's personal computer.
+# Settings for testing when database and app are within a Docker bridge network.
 # These complement and override settings from 'application.yml'.
 
 logging:
@@ -10,7 +10,7 @@ logging:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/granite
+    url: jdbc:postgresql://192.168.0.1:5432/granite
     username: granite
     password: test
     initialization-mode: always
