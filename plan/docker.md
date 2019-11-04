@@ -1,41 +1,60 @@
 # Use of Docker
 
-Docker is a new tool for me and I am exploring ways it can be used to simplify building, testing, deployment, etc.
+Docker is a new tool for me and I am exploring ways it can be used to simplify building, testing, deployment, etc.  There are three main ways I want to be able to run the app:
 
-## TL/DR: How to run the app and database locally with Docker
+1. Running the classes from my IDE, not from a container, and connecting to a database running on localhost.  Database connection info is stored in a configuration file such as `application-dev.yml`.
+2. Running the app in a container, connecting to a database of my choice, passing in the connection info via environment variables in the `docker run` commmand.  The database may live in a container or may not, and the app shouldn't need to know.  This can be used for local testing or for production deployments, since the secret connection info is never stored in source code.
+3. Spinning up a fresh database and a fresh app in containers at the same time; this would be for testing and continuous integration.
 
-First, spin up a database in a background container:
+## Quick Start
+
+### Spin up an instance of the database with test data on your local machine
+
+This is necessary for the first two usage cases listed above.
 
     docker container run -d -p 5432:5432 --name myGraniteDB joeclark77/granite-db:latest
     
-Now, spin up an application in a container, *linking* it to the database container and setting the database connection info via environment variables
+By the way, if you want to log into the database console with `psql` to do some customization or just take a look around, do this:
 
-    docker container run -p 8080:8080 --link myGraniteDB:myGraniteDB 
-      -e POSTGRES_DB_URL='jdbc:postgresql://myGraniteDB:5432/granite' 
+    docker exec -it myGraniteDB psql -U granite
+
+### Launch the app from an IDE
+
+In IntelliJ IDEA, create a **Run Configuration** that identifies `net.joeclark.webapps.granite.Application` as the **main class**, and adds this **program argument**: `--spring.profiles.active=dev`.  That'll tell it to load the connection info from `application-dev.yml` which points to a database at `localhost:5432`.
+
+Now you can point your browser at localhost:8080 and use the application.  Two users are initialized by default: `admin` with password `super` and SUPER privileges, and `joe` with password `pass` and AGENT privileges.
+
+### Launch a containerized instance of the app
+
+You tell the container where the database is by passing in environment variables.  In this case I'm connecting to my local instance.  For Docker, "`localhost`" refers to the container, not the host machine, so you substitute "**`host.docker.internal`**" to point a URL at the host machine's ports:
+
+    docker container run -p 8080:8080
+      -e POSTGRES_DB_URL='jdbc:postgresql://host.docker.internal:5432/granite' 
       -e POSTGRES_DB_USERNAME='granite' 
       -e POSTGRES_DB_PASSWORD='test' 
       joeclark77/granite:latest
 
-## TL/DR: How to run the app with Docker (DB and app in a Docker network)
+As above, you can point the browser at localhost:8080 to log in.  Or alter the `-p` argument to publish the app on a different port, for example `-p 80:8080` will allow you to access the app at localhost:80.
+
+### Launch fresh containers of the database and app together
 
 First, create a network for the database container and application container to be able to see each other.  You only need to do this once:
 
     docker network create -d bridge --subnet 192.168.0.0/24 --gateway 192.168.0.1 mynet
     
-Next, spin up a database in a background container:
+Then, spin up a database container in the custom network:
 
-    docker container run -d -p 5432:5432 --net=mynet --name myGraniteDB joeclark77/granite-db:latest
+    docker container run -d --net=mynet --name myGraniteDB joeclark77/granite-db:latest
     
 Now, spin up the application in a container:
-**This doesn't work at present because I've changed the default `application.yml` to look for database connection info in environment variables.  You need to tell the container to start with `application-test.yml` and I haven't figured that out yet.** 
 
-    docker container run -p 8080:8080 --net=mynet joeclark77/granite:latest
+    docker container run --net=mynet -p 8080:8080
+      -e SPRING_PROFILES_ACTIVE='test' 
+      joeclark77/granite:latest
 
-Now you can point your browser at localhost:8080 and use the application.  Two users are initialized by default: `admin` with password `super` and SUPER privileges, and `joe` with password `pass` and AGENT privileges.
+This too can be accessed at localhost:8080, or you can publish it to a different port, as noted above.
 
-If you want to log into the database console with `psql`, do this:
-
-    docker exec -it myGraniteDB psql -U granite
+**Note: I think this use case could be better implemented using Docker Compose or something. I'll work on learning that tool soon.**
 
 ## Current uses of Docker
 
