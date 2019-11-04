@@ -3,6 +3,7 @@ package net.joeclark.webapps.granite.home;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +14,9 @@ public class HomeController {
 
     Logger logger = LoggerFactory.getLogger(HomeController.class);
 
+    @Value("${build.version}")
+    private String buildVersion;
+
     @Autowired
     private GreetingService greetingService;
 
@@ -21,6 +25,7 @@ public class HomeController {
     public String publicIndex( Model model ) {
         logger.debug("Processing index page request.");
         model.addAttribute("greeting",greetingService.greeting());
+        model.addAttribute("buildVersion",buildVersion);
         return "index"; // resolves to src/main/resources/templates/index.html
     }
 
