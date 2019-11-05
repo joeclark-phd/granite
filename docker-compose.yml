@@ -1,0 +1,14 @@
+version: "3.7"
+services:
+
+  db:
+    image: joeclark77/granite-db:latest
+
+  webapp:
+    image: joeclark77/granite:latest
+    environment:
+      - SPRING_PROFILES_ACTIVE=compose
+    ports:
+      - "8080:8080"
+    depends_on:
+     - db

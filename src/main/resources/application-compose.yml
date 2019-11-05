@@ -1,0 +1,17 @@
+# Settings for testing when database and app are launched by Docker-Compose.
+# These complement and override settings from 'application.yml'.
+
+logging:
+  level:
+    root: WARN
+    org.springframework: INFO
+    net.joeclark.webapps.granite: TRACE
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://db:5432/granite
+    username: granite
+    password: test
+    initialization-mode: always
+

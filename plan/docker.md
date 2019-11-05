@@ -36,7 +36,17 @@ You tell the container where the database is by passing in environment variables
 
 As above, you can point the browser at localhost:8080 to log in.  Or alter the `-p` argument to publish the app on a different port, for example `-p 80:8080` will allow you to access the app at localhost:80.
 
-### Launch fresh containers of the database and app together
+### Launch fresh containers of the database and app together (using Docker-Compose)
+
+Navigate to the root directory of this project and enter:
+
+    docker-compose up
+    
+That's it!
+
+Docker-Compose uses the file `docker-compose.yml` for its instructions (so that's where you'd change the port mapping), and will run the app using the "compose" profile (see `application-compose.yml` to configure it.)
+
+### Launch fresh containers of the database and app together (manually - deprecated)
 
 First, create a network for the database container and application container to be able to see each other.  You only need to do this once:
 
@@ -49,12 +59,12 @@ Then, spin up a database container in the custom network:
 Now, spin up the application in a container:
 
     docker container run --net=mynet -p 8080:8080
-      -e SPRING_PROFILES_ACTIVE='test' 
+      -e SPRING_PROFILES_ACTIVE='dockernet' 
       joeclark77/granite:latest
 
 This too can be accessed at localhost:8080, or you can publish it to a different port, as noted above.
 
-**Note: I think this use case could be better implemented using Docker Compose or something. I'll work on learning that tool soon.**
+**Note:** I think the Docker-Compose method (above) is a better way to accomplish the same thing.  These instructions and the `dockernet` profile are preserved because this info might be handy for some future situations.
 
 ## Current uses of Docker
 

@@ -1,10 +1,10 @@
-# Settings for testing when database and app are within a Docker bridge network.
+# Settings for testing when database and app are within a custom Docker bridge network with the database.
 # These complement and override settings from 'application.yml'.
 
 logging:
   level:
-    root: INFO
-    org.springframework: DEBUG
+    root: WARN
+    org.springframework: INFO
     net.joeclark.webapps.granite: TRACE
 
 spring:
