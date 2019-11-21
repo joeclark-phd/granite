@@ -9,6 +9,7 @@ import org.springframework.boot.test.util.TestPropertyValues;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.GenericContainer;
@@ -53,6 +54,7 @@ class AgencyControllerIntegrationTest {
     private MockMvc mockMvc;
 
     @Test
+    @WithMockUser(value="user")
     public void retrievesAgenciesFromDevDatabase() throws Exception {
         this.mockMvc.perform(get("/api/v1/agency"))
                     //.andDo(print())
