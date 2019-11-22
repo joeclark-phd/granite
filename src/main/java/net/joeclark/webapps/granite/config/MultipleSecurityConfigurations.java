@@ -34,7 +34,7 @@ public class MultipleSecurityConfigurations {
 
             JWTAuthenticationFilter jwtAuthenticationFilter = new JWTAuthenticationFilter(authenticationManager());
             jwtAuthenticationFilter.setFilterProcessesUrl("/api/login"); // this endpoint will receive JWT sign-in requests (should be POST only)
-            jwtAuthenticationFilter.setPostOnly(true);
+            jwtAuthenticationFilter.setPostOnly(true); // TODO: this doesn't work; GET requests work just as well. find a fix.
 
             http.antMatcher("/api/**")
                     .sessionManagement()
