@@ -31,17 +31,20 @@ public class MultipleSecurityConfigurations {
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {
+
+            JWTAuthenticationFilter jwtAuthenticationFilter = new JWTAuthenticationFilter(authenticationManager());
+            jwtAuthenticationFilter.setFilterProcessesUrl("/api/login");
+
             http.antMatcher("/api/**")
                     .sessionManagement()
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                         .and()
                     .csrf().disable()
-                    .formLogin().loginProcessingUrl("/api/login").and() // TODO: this is wrong. don't do it. but somehow I need JWTAuthenticationFilter to process at this URL!
                     .authorizeRequests()
                         .antMatchers(HttpMethod.POST,"/api/login").permitAll()
                         .anyRequest().authenticated()
                         .and()
-                    .addFilter(new JWTAuthenticationFilter(authenticationManager()))
+                    .addFilter(jwtAuthenticationFilter)
                     .addFilter(new JWTAuthorizationFilter(authenticationManager()));
 
             logger.debug("Set up custom security configuration for Granite API.");
