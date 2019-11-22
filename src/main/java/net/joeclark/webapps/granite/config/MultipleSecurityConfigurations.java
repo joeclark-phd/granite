@@ -33,19 +33,19 @@ public class MultipleSecurityConfigurations {
         protected void configure(HttpSecurity http) throws Exception {
 
             JWTAuthenticationFilter jwtAuthenticationFilter = new JWTAuthenticationFilter(authenticationManager());
-            jwtAuthenticationFilter.setFilterProcessesUrl("/api/login");
+            jwtAuthenticationFilter.setFilterProcessesUrl("/api/login"); // this endpoint will receive JWT sign-in requests (should be POST only)
 
             http.antMatcher("/api/**")
                     .sessionManagement()
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // no session cookie for API endpoints
                         .and()
-                    .csrf().disable()
+                    .csrf().disable() // no web forms for the REST API so no CSRF tokens will be created or checked
                     .authorizeRequests()
-                        .antMatchers(HttpMethod.POST,"/api/login").permitAll()
+                        //.antMatchers(HttpMethod.POST,"/api/login").permitAll() // not needed apparently
                         .anyRequest().authenticated()
                         .and()
-                    .addFilter(jwtAuthenticationFilter)
-                    .addFilter(new JWTAuthorizationFilter(authenticationManager()));
+                    .addFilter(jwtAuthenticationFilter) // a filter to intercept sign-in requests at the endpoint defined above
+                    .addFilter(new JWTAuthorizationFilter(authenticationManager())); // a filter to validate JWTs with each request
 
             logger.debug("Set up custom security configuration for Granite API.");
         }

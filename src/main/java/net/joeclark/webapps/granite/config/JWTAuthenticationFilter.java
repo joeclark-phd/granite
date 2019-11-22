@@ -5,7 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -34,8 +34,23 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
-            User creds = new ObjectMapper().readValue(request.getInputStream(), User.class);
             logger.warn("Attempting authentication in JWTAuthenticationFilter");
+            logger.warn("inputstream: " + request.getInputStream().toString());
+
+            class LoginAttempt {
+                private String username;
+                private String password;
+                public LoginAttempt(String username, String password) {
+                    this.username = username;
+                    this.password = password;
+                }
+                public String getUsername() { return username; }
+                public String getPassword() { return password; }
+                public void setUsername(String username) { this.username = username; }
+                public void setPassword(String password) { this.password = password; }
+            }
+
+            LoginAttempt creds = new ObjectMapper().readValue(request.getInputStream(), LoginAttempt.class);
             return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             creds.getUsername(),
