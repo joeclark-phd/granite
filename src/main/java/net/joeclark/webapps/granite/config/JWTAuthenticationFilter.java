@@ -20,6 +20,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 
+// This filter intercepts the authentication attempt for the REST API expecting a JSON body like {"username":"joe", "password":"pass"}
+// and returns a JWT token in the Authorization header.
+// Alternatively, I could have just created a RestController and implemented this as an endpoint.  An example of someone who did it that way can be seen
+// at: https://github.com/nlpraveennl/springsecurity/blob/master/G_JwtJC/src/main/java/com/gmail/nlpraveennl/controller/RestAPIController.java
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     Logger logger = LoggerFactory.getLogger(JWTAuthenticationFilter.class);
