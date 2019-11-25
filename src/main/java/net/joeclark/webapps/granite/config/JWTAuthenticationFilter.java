@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -47,22 +48,28 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        try {
-            logger.warn("Attempting authentication in JWTAuthenticationFilter");
-            logger.warn("inputstream: " + request.getInputStream().toString());
-
-
-            LoginAttempt creds = new ObjectMapper().readValue(request.getInputStream(), LoginAttempt.class);
-            return authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            creds.getUsername(),
-                            creds.getPassword(),
-                            new ArrayList<>()
-                    )
-            );
-        } catch( IOException e ) {
-            throw new RuntimeException(e);
+        if (!request.getMethod().equals("POST")) {
+            throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
         }
+
+        logger.info("Attempting REST API authentication in JWTAuthenticationFilter");
+
+        LoginAttempt creds;
+        try {
+            creds = new ObjectMapper().readValue(request.getInputStream(), LoginAttempt.class);
+        } catch( IOException e ) {
+            // this occurs if JSON body of request is empty or malformed
+            throw new org.springframework.security.authentication.AuthenticationServiceException(e.getMessage());
+        }
+
+        return authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                    creds.getUsername(),
+                    creds.getPassword(),
+                    new ArrayList<>()
+                )
+            );
+
     }
 
     @Override

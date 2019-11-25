@@ -5,6 +5,7 @@ logging:
   level:
     root: WARN
     org.springframework: INFO
+    org.springframework.security: DEBUG
     net.joeclark.webapps.granite: TRACE
 
 spring:
