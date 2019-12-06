@@ -92,7 +92,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         response.setStatus(response.SC_UNAUTHORIZED);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding(StandardCharsets.UTF_8.toString());
-        response.getWriter().write("{\"error\": \"authentication error?\"}");
+        response.getWriter().write("{\"error\": \"unsuccessful authentication\"}"); // a small security risk because it reveals the authentication URL to a hacker that randomly probes URLs for it (any other /api URL gives the error "not authorized")
 
     }
 }

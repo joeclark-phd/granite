@@ -1,6 +1,9 @@
 package net.joeclark.webapps.granite.config;
 
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,6 +17,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
+    Logger logger = LoggerFactory.getLogger(JWTAuthorizationFilter.class);
 
     public JWTAuthorizationFilter(AuthenticationManager authenticationManager) {
         super(authenticationManager);
@@ -26,8 +30,13 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
             chain.doFilter(request,response);
             return;
         }
-        UsernamePasswordAuthenticationToken authentication = getAuthentication(request);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        try {
+            UsernamePasswordAuthenticationToken authentication = getAuthentication(request);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            logger.debug("JWT parsed successfully.");
+        } catch (JwtException e) {
+            logger.debug("JWT parse or authorization failure: " + e.toString());
+        }
         chain.doFilter(request,response);
     }
 

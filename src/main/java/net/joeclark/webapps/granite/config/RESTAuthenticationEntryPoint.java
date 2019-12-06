@@ -20,10 +20,9 @@ public class RESTAuthenticationEntryPoint implements AuthenticationEntryPoint {
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
         logger.warn("in RESTAuthEntryPoint: "+e.getMessage());
 
-        // TODO: enrich/improve error messages
         response.setStatus(response.SC_UNAUTHORIZED);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding(StandardCharsets.UTF_8.toString());
-        response.getWriter().write("{\"error\": \"unauthorized?\"}");
+        response.getWriter().write("{\"error\": \"not authorized\"}");
     }
 }
