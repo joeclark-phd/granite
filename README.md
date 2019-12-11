@@ -1,4 +1,6 @@
 [![Build Status](https://travis-ci.org/joeclark-phd/granite.svg?branch=master)](https://travis-ci.org/joeclark-phd/granite)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4a24c8e6e4b94407a88e5d42d24bf29c)](https://www.codacy.com/manual/joeclark-phd/granite?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=joeclark-phd/granite&amp;utm_campaign=Badge_Grade)
+
 
 # granite
 
