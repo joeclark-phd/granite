@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/joeclark-phd/granite.svg?branch=master)](https://travis-ci.org/joeclark-phd/granite)
+
 # granite
 
 This project is intended to be a model or starter for a Java web application that will be highly-maintainable over a long period of time (20+ years).
