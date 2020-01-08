@@ -46,8 +46,8 @@ Since code updates may be "out of sync" with database changes, some effort shoul
 
 ## technologies
 
-- Java 8
-  - Java is up to version 12 at the time of writing, but Java 8 was a major milestone that every dev should be comfortable with.
+- Java 11
+  - Java releases a "long term support" version every three years; the current one is Java 11, and every Java app should be *at least* on Java 11.  Our continuous integration should test the code also on the latest "short term support" version, which is Java 13 at the time of writing.  The next "long term support" version will be Java 17 due out in September 2021.
   
 - Spring Boot
   - This framework does a lot behind the scenes, which lets us keep our own codebase smaller, hence more readable and maintainable by future devs.
