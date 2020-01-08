@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk-alpine
+FROM openjdk:13-jdk-alpine
 VOLUME /tmp
 
 # copy dependencies into image; this will change less often so we may get some benefit from the Docker cache here
