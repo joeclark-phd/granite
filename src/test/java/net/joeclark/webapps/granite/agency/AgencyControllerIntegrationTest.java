@@ -59,7 +59,7 @@ class AgencyControllerIntegrationTest {
         this.mockMvc.perform(get("/api/v1/agency"))
                     //.andDo(print())
                     .andExpect(status().isOk())
-                    .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                     .andExpect(jsonPath("$..agencyName", Matchers.containsInAnyOrder("Joes Sundries","Clark & Sons"))); // a problematic test because it will only pass if those are the ONLY two agencies in the database; obviously passes only for a carefully specified test DB
     }
 
