@@ -12,8 +12,8 @@ spring:
     cache: false
   datasource:
     # Datasource info is to be provided by environment variables. You can override this in an environment-specific
-    # config file, e.g. application-dev.yaml which uses 'localhost' as the host name, or application-test.yaml which
-    # works when the DB and app are running within a Docker network on the same machine.
+    # config file, e.g. application-dev.yaml which uses 'localhost' as the host name, or application-compose.yaml which
+    # works when the DB and app are both launched by docker-compose.
     # (NB: Some of our automated tests need the 'url' line to be here, even if the database doesn't actually exist.)
     driver-class-name: org.postgresql.Driver
     url: ${POSTGRES_DB_URL}
