@@ -8,8 +8,11 @@ import java.util.List;
 @Service
 public class AgencyServiceImpl implements AgencyService {
 
-    @Autowired
-    AgencyRepository agencyRepository;
+    private final AgencyRepository agencyRepository;
+
+    public AgencyServiceImpl(AgencyRepository agencyRepository) {
+        this.agencyRepository=agencyRepository;
+    }
 
     @Override
     public List<Agency> findAll() {

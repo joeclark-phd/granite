@@ -1,7 +1,6 @@
 package net.joeclark.webapps.granite.agency;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -10,11 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-// TODO: create tests of this repository implementation
-// TODO: create tests of correct loading of implementation based on profiles
-
 @Repository
-public class LocalDatabaseAgencyRepository implements AgencyRepository {
+public class AgencyRepositoryImpl implements AgencyRepository {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
